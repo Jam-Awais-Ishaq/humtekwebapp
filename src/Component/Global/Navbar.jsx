@@ -9,7 +9,7 @@ import {
   Moon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import imageLogo from "../../assets/logo.jpeg"
+import imageLogo from "../../assets/logo.jpeg";
 const Navbar = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);

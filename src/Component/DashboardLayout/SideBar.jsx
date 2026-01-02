@@ -12,8 +12,7 @@ import {
   ChevronRight,
 } from "@mui/icons-material";
 import { FaBars } from "react-icons/fa6";
-import { MdCancel } from "react-icons/md";
-import imgLogo from "../../assets/logo.jpeg";
+import imgLogo from "../../../assets/logo.jpeg";
 const menuItems = [
   { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
   { text: "Analytics", icon: <Analytics />, path: "/dashboard/analytics" },
