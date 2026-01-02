@@ -1,0 +1,64 @@
+/* STARS */
+.star {
+  font-size: 10px;
+  animation-name: blink, move;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.star-white {
+  color: white;
+}
+
+.star-yellow {
+  color: gold;
+}
+
+/* Blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* Move randomly */
+@keyframes move {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(25px, -20px); }
+  100% { transform: translate(-20px, 20px); }
+}
+
+/* TEXT */
+.form-text {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 6px;
+  animation: zoomIn 0.8s ease-out, glow 1.5s infinite alternate;
+}
+
+.text-login {
+  color: white;
+}
+
+.text-register {
+  color: gold;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px currentColor;
+  }
+  to {
+    text-shadow: 0 0 25px currentColor;
+  }
+}
