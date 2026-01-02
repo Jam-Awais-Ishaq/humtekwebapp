@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from "@mui/icons-material";
 import { FaBars } from "react-icons/fa6";
-import imgLogo from "@/assets/logo.jpeg";
+import imgLogo from "@/assets/Logo.jpeg";
 const menuItems = [
   { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
   { text: "Analytics", icon: <Analytics />, path: "/dashboard/analytics" },
