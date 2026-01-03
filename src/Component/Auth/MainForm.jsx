@@ -25,7 +25,7 @@ const MainForm = () => {
           lg:flex-row
         "
         >
-          <div className="relative w-full lg:w-1/2 overflow-hidden min-h-[500px]">
+          <div className="relative w-full lg:w-1/2 overflow-hidden min-h-125">
             <div
               className={`absolute inset-0 p-6 sm:p-8 transition-transform duration-700 ${isLogin ? "translate-x-0" : "-translate-x-full"
                 }`}>

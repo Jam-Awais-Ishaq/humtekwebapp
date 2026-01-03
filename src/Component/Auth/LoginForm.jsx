@@ -80,8 +80,8 @@ const LoginForm = ({ switchToRegister, isOpen, setOpenModal }) => {
             {/* Login Button */}
             <button
               type="submit"
-              className="py-3 rounded text-white font-semibold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500
-                         hover:bg-gradient-to-r hover:from-red-500 hover:via-purple-500 hover:to-pink-500
+              className="py-3 rounded text-white font-semibold bg-linear-to-r from-purple-500 via-pink-500 to-red-500
+                         hover:bg-linear-to-r hover:from-red-500 hover:via-purple-500 hover:to-pink-500
                          transition-colors duration-700 cursor-pointer ">
               Login
             </button>
