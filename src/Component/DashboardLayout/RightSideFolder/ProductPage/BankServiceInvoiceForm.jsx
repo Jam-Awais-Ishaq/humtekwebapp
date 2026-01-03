@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Context } from "../../../../Context/ContextProvider";
+import { useNavigate } from "react-router-dom";
 
 const BankServiceInvoiceForm = () => {
+  const { invoices, setInvoices, showStatusModal } = useContext(Context);
   const [invoice, setInvoice] = useState({
     bankName: "",
     branch: "",
@@ -16,25 +19,53 @@ const BankServiceInvoiceForm = () => {
     status: "Pending",
   });
 
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
-    setInvoice({
-      ...invoice,
-      [e.target.name]: e.target.value,
-    });
+    setInvoice({ ...invoice, [e.target.name]: e.target.value });
   };
 
   const totalAmount =
-    Number(invoice.amount) +
-    (Number(invoice.amount) * Number(invoice.tax)) / 100;
+    Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Invoice Created:", { ...invoice, totalAmount });
-    // 🔴 backend API call yahan hoga
+
+    const newInvoice = {
+      ...invoice,
+      id: Date.now(), // unique id
+      totalAmount,
+      product: invoice.machineModel, // map product field
+      branchCode: invoice.machineSerial, // map branch code
+    };
+
+    setInvoices([...invoices, newInvoice]);
+    setInvoice({
+      bankName: "",
+      branch: "",
+      machineModel: "",
+      machineSerial: "",
+      serviceType: "Maintenance",
+      serviceDescription: "",
+      serviceDate: "",
+      invoiceDate: "",
+      dueDate: "",
+      amount: "",
+      tax: 0,
+      status: "Pending",
+    });
+
+    showStatusModal({
+      type: "success",
+      title: "Invoice Created",
+      message: "The bank service invoice has been created successfully.",
+      primaryButtonText: "Great!",
+      onprimaryAction: () => { navigate('/dashboard/invoices') }
+    })
   };
 
   return (
-    <div className="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+    <div className="max-w-5xl mx-auto bg-white p-4">
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
         Banking Machine Service Invoice
       </h2>
@@ -50,7 +81,7 @@ const BankServiceInvoiceForm = () => {
               value={invoice.bankName}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             >
               <option value="">Select Bank</option>
               <option value="Bank Islami">Bank Islami</option>
@@ -66,7 +97,7 @@ const BankServiceInvoiceForm = () => {
               name="branch"
               placeholder="Bahawalpur Branch"
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
           </div>
         </div>
@@ -100,11 +131,11 @@ const BankServiceInvoiceForm = () => {
         {/* ===== SERVICE DETAILS ===== */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Service Type</label>
+            <label className="block text-gray-700 font-semibold mb-1 ml-1">Service Type</label>
             <select
               name="serviceType"
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             >
               <option>Maintenance</option>
               <option>Repair</option>
@@ -113,24 +144,24 @@ const BankServiceInvoiceForm = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Service Date</label>
+            <label className="block text-gray-700 font-semibold mb-1 ml-1">Service Date</label>
             <input
               type="date"
               name="serviceDate"
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-gray-700 font-semibold mb-1">Service Description</label>
+          <label className="block text-gray-700 font-semibold mb-1 ml-1">Description</label>
           <textarea
             name="serviceDescription"
             rows="3"
             placeholder="SL45 ATM routine maintenance & calibration"
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
           />
         </div>
 
@@ -144,7 +175,7 @@ const BankServiceInvoiceForm = () => {
               placeholder="50000"
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
           </div>
 
@@ -155,7 +186,7 @@ const BankServiceInvoiceForm = () => {
               name="tax"
               placeholder="16"
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
           </div>
 
@@ -178,7 +209,7 @@ const BankServiceInvoiceForm = () => {
               type="date"
               name="invoiceDate"
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+              className="w-full px-4 py-3 rounded-lg border cursor-pointer border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
           </div>
 
@@ -188,7 +219,7 @@ const BankServiceInvoiceForm = () => {
               type="date"
               name="dueDate"
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
           </div>
         </div>
@@ -196,7 +227,7 @@ const BankServiceInvoiceForm = () => {
         {/* ===== SUBMIT BUTTON ===== */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md hover:shadow-lg"
+          className="w-full bg-blue-600 text-white cursor-pointer py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md hover:shadow-lg"
         >
           Create Invoice
         </button>

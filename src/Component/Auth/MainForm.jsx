@@ -3,10 +3,12 @@ import Register from "./Register";
 import formImg from "../../assets/form1.jpg";
 import Modal from "../common/Modal";
 import ForgetWrapper from "./ForgetWrapper";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Context } from "../../Context/ContextProvider";
 const MainForm = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+
+  const { openModal, setOpenModal } = useContext(Context);
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

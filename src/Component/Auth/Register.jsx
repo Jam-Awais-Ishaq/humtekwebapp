@@ -55,7 +55,7 @@ const Register = ({ switchToLogin }) => {
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={`p-1 border-0 border-b-[2px] focus:outline-none focus:ring-2 ${
+            className={`p-1 border-0 border-b-2 focus:outline-none focus:ring-2 ${
               errors.name ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
             }`}/>
           {errors.name && <span className="text-red-500 text-[10px]">{errors.name}</span>}
@@ -68,7 +68,7 @@ const Register = ({ switchToLogin }) => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`border p-1 border-0 border-b-[2px] focus:outline-none focus:ring-2 ${
+            className={`p-1 border border-b-2 focus:outline-none focus:ring-2 ${
               errors.email ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
             }`}
           />
@@ -82,7 +82,7 @@ const Register = ({ switchToLogin }) => {
             placeholder="Company NTN (e.g., 1234567-1)"
             value={ntn}
             onChange={(e) => setNtn(e.target.value)}
-            className={`border p-1 border-0 border-b-[2px] focus:outline-none focus:ring-2 ${
+            className={`p-1 border border-b-2 focus:outline-none focus:ring-2 ${
               errors.ntn ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
             }`}
           />
@@ -96,7 +96,7 @@ const Register = ({ switchToLogin }) => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`border p-1 border-0 border-b-[2px] w-full pr-10 focus:outline-none focus:ring-2 ${
+            className={`p-1 border border-b-2 w-full pr-10 focus:outline-none focus:ring-2 ${
               errors.password ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
             }`}
           />
@@ -116,7 +116,7 @@ const Register = ({ switchToLogin }) => {
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`border p-1 border-0 border-b-[2px] w-full pr-10 focus:outline-none focus:ring-2 ${
+            className={`p-1 border border-b-2 w-full pr-10 focus:outline-none focus:ring-2 ${
               errors.confirmPassword ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-blue-400"
             }`}
           />
@@ -128,10 +128,9 @@ const Register = ({ switchToLogin }) => {
           </span>
           {errors.confirmPassword && <span className="text-red-500 text-[10px]">{errors.confirmPassword}</span>}
         </div>
-
         <button
           type="submit"
-          className="py-2 rounded text-white font-semibold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 mt-3
+          className="py-2 rounded text-white font-semibold bg-linear-to-r from-purple-500 via-pink-500 to-red-500 mt-3
                      hover:from-red-500 hover:via-purple-500 hover:to-pink-500 transition-colors duration-700"
         >
           Register
