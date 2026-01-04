@@ -2,45 +2,12 @@ import { useContext, useState } from "react";
 import { Context } from "../../../../Context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 
-const BankServiceInvoiceForm = () => {
+const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   const { invoices, setInvoices, showStatusModal } = useContext(Context);
-  const [invoice, setInvoice] = useState({
-    bankName: "",
-    branch: "",
-    machineModel: "",
-    machineSerial: "",
-    serviceType: "Maintenance",
-    serviceDescription: "",
-    serviceDate: "",
-    invoiceDate: "",
-    dueDate: "",
-    amount: "",
-    tax: 0,
-    status: "Pending",
-  });
 
-  const navigate = useNavigate()
-
-  const handleChange = (e) => {
-    setInvoice({ ...invoice, [e.target.name]: e.target.value });
-  };
-
-  const totalAmount =
-    Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newInvoice = {
-      ...invoice,
-      id: Date.now(), // unique id
-      totalAmount,
-      product: invoice.machineModel, // map product field
-      branchCode: invoice.machineSerial, // map branch code
-    };
-
-    setInvoices([...invoices, newInvoice]);
-    setInvoice({
+  const isEditMode = Boolean(editInvoice);
+  const [invoice, setInvoice] = useState(
+    editInvoice || {
       bankName: "",
       branch: "",
       machineModel: "",
@@ -55,13 +22,42 @@ const BankServiceInvoiceForm = () => {
       status: "Pending",
     });
 
-    showStatusModal({
-      type: "success",
-      title: "Invoice Created",
-      message: "The bank service invoice has been created successfully.",
-      primaryButtonText: "Great!",
-      onprimaryAction: () => { navigate('/dashboard/invoices') }
-    })
+  const handleChange = (e) => {
+    setInvoice({ ...invoice, [e.target.name]: e.target.value });
+  };
+
+  const totalAmount =
+    Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newInvoice = {
+      ...invoice,
+      id: editInvoice ? editInvoice.id : Date.now(), // unique id
+      totalAmount,
+      product: invoice.machineModel, // map product field
+      branchCode: invoice.machineSerial, // map branch code
+    };
+
+    if (editInvoice) {
+      setInvoices(invoices.map((inv) => inv.id === editInvoice.id ? newInvoice : inv));
+
+      showStatusModal({
+        type: "success",
+        title: "Invoice Updated",
+        message: "Invoice successfully update ho gaya",
+      });
+    }
+    else {
+      setInvoices([...invoices, newInvoice]);
+      showStatusModal({
+        type: "success",
+        title: "Invoice Created",
+        message: "Invoice successfully create ho gaya",
+      });
+    }
+    onClose();
   };
 
   return (
@@ -96,6 +92,7 @@ const BankServiceInvoiceForm = () => {
               type="text"
               name="branch"
               placeholder="Bahawalpur Branch"
+              value={invoice.branch}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
@@ -110,6 +107,7 @@ const BankServiceInvoiceForm = () => {
               type="text"
               name="machineModel"
               placeholder="SL45"
+              value={invoice.machineModel}
               onChange={handleChange}
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
@@ -122,6 +120,7 @@ const BankServiceInvoiceForm = () => {
               type="text"
               name="machineSerial"
               placeholder="ATM-45872"
+              value={invoice.machineSerial}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
@@ -134,6 +133,7 @@ const BankServiceInvoiceForm = () => {
             <label className="block text-gray-700 font-semibold mb-1 ml-1">Service Type</label>
             <select
               name="serviceType"
+              value={invoice.serviceType}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             >
@@ -148,6 +148,7 @@ const BankServiceInvoiceForm = () => {
             <input
               type="date"
               name="serviceDate"
+              value={invoice.serviceDate}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
@@ -160,6 +161,7 @@ const BankServiceInvoiceForm = () => {
             name="serviceDescription"
             rows="3"
             placeholder="SL45 ATM routine maintenance & calibration"
+            value={invoice.serviceDescription}
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
           />
@@ -173,6 +175,7 @@ const BankServiceInvoiceForm = () => {
               type="number"
               name="amount"
               placeholder="50000"
+              value={invoice.amount}
               onChange={handleChange}
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
@@ -185,6 +188,7 @@ const BankServiceInvoiceForm = () => {
               type="number"
               name="tax"
               placeholder="16"
+              value={invoice.tax}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
@@ -208,6 +212,7 @@ const BankServiceInvoiceForm = () => {
             <input
               type="date"
               name="invoiceDate"
+              value={invoice.invoiceDate}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border cursor-pointer border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
@@ -218,6 +223,7 @@ const BankServiceInvoiceForm = () => {
             <input
               type="date"
               name="dueDate"
+              value={invoice.dueDate}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
             />
@@ -225,12 +231,14 @@ const BankServiceInvoiceForm = () => {
         </div>
 
         {/* ===== SUBMIT BUTTON ===== */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white cursor-pointer py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md hover:shadow-lg"
-        >
-          Create Invoice
-        </button>
+        <div className={`w-full ${isEditMode ? "flex justify-end" : ""}`}>
+          <button
+            type="submit"
+            className={` ${isEditMode ? "w-fit px-4 mr-1" : "w-full"} bg-blue-600 text-white cursor-pointer py-3 rounded-md font-semibold hover:bg-blue-700 transition shadow-md hover:shadow-lg`}
+          >
+            {isEditMode ? "Update" : "Create Invoice"}
+          </button>
+        </div>
       </form>
     </div>
   );

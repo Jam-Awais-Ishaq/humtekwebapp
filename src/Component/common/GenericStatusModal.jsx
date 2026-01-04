@@ -4,7 +4,7 @@ import {
   FaInfoCircle,
   FaExclamationTriangle,
 } from "react-icons/fa";
-
+import ReactDOM from "react-dom";
 const ICONS = {
   success: <FaCheckCircle className="text-green-500 text-6xl animate-bounce" />,
   error: <FaTimesCircle className="text-red-500 text-6xl" />,
@@ -19,12 +19,11 @@ const GenericStatusModal = ({
   message,
   primaryButtonText = "OK",
   onPrimaryAction,
-  onClose,
 }) => {
   if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+  return  ReactDOM.createPortal(
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center
                       animate-scaleIn shadow-xl">
 
@@ -46,22 +45,17 @@ const GenericStatusModal = ({
         <div className="mt-6 flex justify-center gap-3">
           <button
             onClick={onPrimaryAction}
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg
+            className="px-5 py-2 w-full bg-blue-600 text-white cursor-pointer rounded-lg
                        hover:bg-blue-700 transition font-semibold"
           >
             {primaryButtonText}
           </button>
 
-          <button
-            onClick={onClose}
-            className="px-5 py-2 border rounded-lg hover:bg-gray-100 transition"
-          >
-            Close
-          </button>
+          
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
-
 export default GenericStatusModal;

@@ -3,10 +3,11 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../../common/Modal";
 import InvoiceView from "./InvoiceView";
 import { Context } from "../../../Context/ContextProvider";
+import BankServiceInvoiceForm from "./ProductPage/BankServiceInvoiceForm";
 
 const InvoicesPage = () => {
 
-   const { invoices, setInvoices, openModal, setOpenModal } = useContext(Context);
+  const { invoices, setInvoices, openModal, setOpenModal, showStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode } = useContext(Context);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [search, setSearch] = useState("");
 
@@ -27,6 +28,14 @@ const InvoicesPage = () => {
       setInvoices(invoices.filter((inv) => inv.id !== id));
     }
   };
+
+  const handleEditsInvoice = (invoice) => {
+    // Navigate to edit page
+
+    setEditInvoice(invoice);
+    setIsEditMode(true);
+    setOpenModal(true);
+  }
 
   return (
     <>
@@ -52,7 +61,7 @@ const InvoicesPage = () => {
         </div>
 
         {/* 🔹 TABLE CARD */}
-        <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-lg pb-0.5 shadow-lg border border-gray-300 overflow-hidden">
           {/* TABLE SCROLL */}
           <div className="max-h-105 overflow-y-auto">
             <table className="w-full text-sm text-left">
@@ -104,7 +113,7 @@ const InvoicesPage = () => {
 
                       {/* AMOUNT */}
                       <td className="px-4 py-3 font-semibold text-green-600">
-                        Rs. {inv.amount.toLocaleString()}
+                        Rs. {inv.amount.toLocaleString(inv)}
                       </td>
 
                       {/* ACTIONS */}
@@ -112,19 +121,19 @@ const InvoicesPage = () => {
                         <div className="flex justify-center gap-3">
                           <button
                             onClick={() => handleView(inv)}
-                            className="p-2 rounded-full hover:bg-blue-100 text-blue-600 transition"
+                            className="p-2 rounded-full hover:bg-blue-100 text-blue-600 cursor-pointer transition"
                           >
                             <FaEye />
                           </button>
                           <button
-                            onClick={() => handleEdit(inv.id)}
-                            className="p-2 rounded-full hover:bg-yellow-100 text-yellow-600 transition"
+                            onClick={() => handleEditsInvoice(inv)}
+                            className="p-2 rounded-full hover:bg-yellow-100 text-yellow-600 cursor-pointer transition"
                           >
                             <FaEdit />
                           </button>
                           <button
                             onClick={() => handleDelete(inv.id)}
-                            className="p-2 rounded-full hover:bg-red-100 text-red-600 transition"
+                            className="p-2 rounded-full hover:bg-red-100 text-red-600 cursor-pointer transition"
                           >
                             <FaTrash />
                           </button>
@@ -148,11 +157,22 @@ const InvoicesPage = () => {
         </div>
       </div>
 
-      <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <InvoiceView
-          invoice={selectedInvoice}
-          onClose={() => setOpenModal(false)}
-        />
+      <Modal isOpen={openModal} onClose={() => { setOpenModal(false); setIsEditMode(false); setEditInvoice(null); }}>
+        {isEditMode ? (
+
+          <BankServiceInvoiceForm
+            editInvoice={editInvoice}
+            onClose={() => {
+              setOpenModal(false);
+              setIsEditMode(false);
+              setEditInvoice(null);
+            }}
+          />) : (
+
+          <InvoiceView
+            invoice={selectedInvoice}
+            onClose={() => setOpenModal(false)}
+          />)}
       </Modal>
     </>
   );

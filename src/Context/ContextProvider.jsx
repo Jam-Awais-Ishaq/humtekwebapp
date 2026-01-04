@@ -5,7 +5,8 @@ export const Context = createContext();
 export const ContextProvider = ({ children }) => {
     const [openModal, setOpenModal] = useState(false);
     const [invoices, setInvoices] = useState([]);
-
+    const [editInvoice, setEditInvoice] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
 
 
 
@@ -33,7 +34,7 @@ export const ContextProvider = ({ children }) => {
         setStatusModal((prev) => ({ ...prev, open: false }));
     };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal }}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal,editInvoice, setEditInvoice,isEditMode, setIsEditMode }}>
             {children}
 
 

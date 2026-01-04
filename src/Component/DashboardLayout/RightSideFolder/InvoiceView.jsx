@@ -2,16 +2,19 @@
 import React, { useContext } from "react";
 import { FaFilePdf, FaTimes } from "react-icons/fa";
 import { Context } from "../../../Context/ContextProvider";
-
+import { generateInvoicePDF } from "../../../utils/invoicePDF";
 const InvoiceView = ({ invoice, onClose }) => {
     if (!invoice) return null;
     const { showStatusModal } = useContext(Context);
 
     const handleGenericAlert = () => {
+
+        generateInvoicePDF(invoice)
+
         showStatusModal({
             type: "info",
             title: "Feature Coming Soon",
-            message: "PDF download feature is under development and will be available soon.",
+            message: "PDF downloaded SuccessFully.",
             primaryButtonText: "OK",
         })
     }
@@ -75,7 +78,7 @@ const InvoiceView = ({ invoice, onClose }) => {
 export default InvoiceView;
 
 const Info = ({ label, value }) => (
-    <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+    <div className="bg-gray-300 p-3 rounded-lg border border-gray-100">
         <p className="text-xs text-gray-500">{label}</p>
         <p className="font-semibold text-gray-800 mt-1">{value}</p>
     </div>
