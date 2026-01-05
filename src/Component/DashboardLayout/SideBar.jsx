@@ -13,13 +13,15 @@ import {
 } from "@mui/icons-material";
 import { FaBars } from "react-icons/fa6";
 import imgLogo from "@/assets/Logo.jpeg";
+import { Profiler } from "react";
+import { User } from "lucide-react";
 const menuItems = [
   { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
   { text: "Analytics", icon: <Analytics />, path: "/dashboard/analytics" },
   { text: "Products", icon: <Inventory />, path: "/dashboard/products" },
   { text: "Invoices", icon: <ReceiptLong />, path: "/dashboard/invoices" },
   { text: "Customers", icon: <People />, path: "/dashboard/customers" },
-  { text: "Settings", icon: <Settings />, path: "/dashboard/settings" },
+  { text: "Profile", icon: <User />, path: "/dashboard/profile" },
 ];
 
 const SideBar = ({
@@ -95,7 +97,7 @@ ${collapsed
                 transition-all duration-300
                 ${isActive
                   ? "bg-linear-to-r from-purple-500 via-pink-500 to-red-500 text-white"
-                  : "hover:bg-linear-to-r hover:from-purple-500 hover:via-pink-500 hover:to-red-500 hover:text-white"
+                  : "hover:bg-linear-to-r text-gray-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 hover:text-white"
                 }
               `
               }
@@ -108,7 +110,7 @@ ${collapsed ? "opacity-0 -translate-x-2.5 pointer-events-none" : "opacity-100 tr
 
               {/* TOOLTIP */}
               {collapsed && (
-                <span className="absolute left-full ml-3 px-2 py-1 text-sm rounded bg-black text-white opacity-0 group-hover:opacity-100 whitespace-nowrap">
+                <span className="absolute left-full ml-3 px-2 py-1 text-sm rounded bg-gray-800 text-white opacity-0 group-hover:opacity-100 whitespace-nowrap">
                   {item.text}
                 </span>
               )}
@@ -116,7 +118,7 @@ ${collapsed ? "opacity-0 -translate-x-2.5 pointer-events-none" : "opacity-100 tr
           ))}
         </nav>
         <div className="absolute bottom-4 w-full px-2">
-          <button className="group relative flex items-center gap-3 w-full px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500 hover:text-white transition">
+          <button className="group relative flex items-center text-gray-600 gap-3 w-full px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500 hover:text-white transition">
             <Logout />
             {!collapsed && <span>Logout</span>}
             {collapsed && (

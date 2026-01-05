@@ -13,7 +13,7 @@ const InvoiceView = ({ invoice, onClose }) => {
 
         showStatusModal({
             type: "info",
-            title: "Feature Coming Soon",
+            title: "Download Complete",
             message: "PDF downloaded SuccessFully.",
             primaryButtonText: "OK",
         })
