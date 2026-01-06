@@ -7,6 +7,7 @@ import ProductsPage from "./RightSideFolder/ProductsPage";
 import InvoicesPage from "./RightSideFolder/InvoicesPage";
 import CustomerPage from "./RightSideFolder/CustomerPage";
 import CompanyProfileSettings from "./RightSideFolder/CompanyProfileSettings";
+import SendEmail from "./RightSideFolder/SendEmail/SendEmail";
 const MainDashboard = () => {
     return (
         <>
@@ -19,6 +20,7 @@ const MainDashboard = () => {
                     <Route path="invoices" element={<InvoicesPage />} />
                     <Route path="customers" element={<CustomerPage />} />
                     <Route path="profile" element={<CompanyProfileSettings />} />
+                    <Route path="sendEmail" element={<SendEmail />} />
                 </Route>
             </Routes>
         </>

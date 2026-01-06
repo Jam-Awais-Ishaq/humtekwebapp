@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import GenericStatusModal from "../Component/common/GenericStatusModal";
+
 export const Context = createContext();
 
 export const ContextProvider = ({ children }) => {
@@ -9,6 +10,12 @@ export const ContextProvider = ({ children }) => {
     const [isEditMode, setIsEditMode] = useState(false);
 
 
+    // User Profile Data 
+    const [userProfile, setUserProfile] = useState({
+        name: "",
+        email: "",
+        companyName: "",
+    });
 
 
     // Generic alert modal state
@@ -34,7 +41,7 @@ export const ContextProvider = ({ children }) => {
         setStatusModal((prev) => ({ ...prev, open: false }));
     };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal,editInvoice, setEditInvoice,isEditMode, setIsEditMode }}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile }}>
             {children}
 
 

@@ -16,7 +16,7 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
   const colorScheme = colorSchemes[colorIndex % colorSchemes.length];
 
   return (
-    <div className={`${colorScheme.bg} ${colorScheme.border}  border-2 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full max-w-sm`}>
+    <div className={`${colorScheme.bg} ${colorScheme.border} cursor-pointer border-2 rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 w-full max-w-sm`}>
       
       {/* Bank Header */}
       <div className="flex items-start justify-between mb-6">
@@ -25,7 +25,7 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
             <MdOutlineAccountBalance className="text-2xl" />
           </div>
           <div>
-            <h3 className={`text-lg font-bold ${colorScheme.text}`}>
+            <h3 className={`text-sm font-bold ${colorScheme.text}`}>
               {data.bankName}
             </h3>
             <div className="flex items-center mt-1 space-x-1">
@@ -36,9 +36,8 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
         </div>
         
         {/* Years Badge */}
-        <div className={`bg-white ${colorScheme.text} px-3 py-2 rounded-xl shadow-sm`}>
-          <span className="text-xl font-bold">{data.totalYears}</span>
-          <span className="text-xs font-medium ml-1">Years</span>
+        <div className={`bg-white ${colorScheme.text} md:w-20 w-auto text-center rounded-xl shadow-sm`}>
+          <span className="text-sm font-bold">{data.totalYears}</span>
         </div>
       </div>
 

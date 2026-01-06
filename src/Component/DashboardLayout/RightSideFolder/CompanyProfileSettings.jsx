@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
 import { Context } from "../../../Context/ContextProvider";
-import { 
-  Building2, 
-  User, 
-  Mail, 
-  Phone, 
-  FileDigit, 
-  Globe, 
-  MapPin, 
+import {
+  Building2,
+  User,
+  Mail,
+  Phone,
+  FileDigit,
+  Globe,
+  MapPin,
   Building,
   BriefcaseBusiness,
   Earth
@@ -28,7 +28,7 @@ const CompanyProfileSettings = () => {
     website: "",
   });
 
-  const { showStatusModal } = useContext(Context);
+  const { showStatusModal, setUserProfile } = useContext(Context);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +37,13 @@ const CompanyProfileSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+
+    setUserProfile({
+      name: formData.ownerName,
+      email: formData.email,
+      companyName: formData.companyName
+    })
+    
     showStatusModal({
       type: "success",
       title: "Profile Updated",
@@ -79,7 +85,7 @@ const CompanyProfileSettings = () => {
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
           <div className="p-6 md:p-6">
             <form onSubmit={handleSubmit} className="space-y-8">
-              
+
               {/* Basic Information Section */}
               <div className={sectionClasses}>
                 <div className="flex items-center gap-2 mb-4">
@@ -87,7 +93,7 @@ const CompanyProfileSettings = () => {
                   <h3 className="text-lg font-semibold text-slate-800">Basic Information</h3>
                   <div className="h-px flex-1 bg-linear-to-r from-blue-100 to-transparent ml-2"></div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Company Name */}
                   <div className="space-y-2">
@@ -130,7 +136,7 @@ const CompanyProfileSettings = () => {
                   <h3 className="text-lg font-semibold text-slate-800">Contact Information</h3>
                   <div className="h-px flex-1 bg-linear-to-r from-indigo-100 to-transparent ml-2"></div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Email */}
                   <div className="space-y-2">
@@ -189,7 +195,7 @@ const CompanyProfileSettings = () => {
                   <h3 className="text-lg font-semibold text-slate-800">Tax Information</h3>
                   <div className="h-px flex-1 bg-linear-to-r from-red-100 to-transparent ml-2"></div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* NTN */}
                   <div className="space-y-2">
@@ -255,7 +261,7 @@ const CompanyProfileSettings = () => {
                   <h3 className="text-lg font-semibold text-slate-800">Address Information</h3>
                   <div className="h-px flex-1 bg-linear-to-r from-green-100 to-transparent ml-2"></div>
                 </div>
-                
+
                 <div className="space-y-6">
                   {/* Address */}
                   <div className="space-y-2">
