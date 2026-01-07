@@ -8,6 +8,7 @@ import InvoicesPage from "./RightSideFolder/InvoicesPage";
 import CustomerPage from "./RightSideFolder/CustomerPage";
 import CompanyProfileSettings from "./RightSideFolder/CompanyProfileSettings";
 import SendEmail from "./RightSideFolder/SendEmail/SendEmail";
+import CheckEmail from "./RightSideFolder/SendEmail/CheckEmail";
 const MainDashboard = () => {
     return (
         <>
@@ -21,6 +22,7 @@ const MainDashboard = () => {
                     <Route path="customers" element={<CustomerPage />} />
                     <Route path="profile" element={<CompanyProfileSettings />} />
                     <Route path="sendEmail" element={<SendEmail />} />
+                    <Route path="checkEmail" element={<CheckEmail />} />
                 </Route>
             </Routes>
         </>

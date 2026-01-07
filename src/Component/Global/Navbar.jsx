@@ -149,54 +149,35 @@ const Navbar = () => {
         <div className="relative" ref={notifyRef}>
           <button
             onClick={() => setNotifyOpen(!notifyOpen)}
-            className="relative p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+            className="relative p-2 rounded-full hover:bg-gray-100 transition-all duration-200 cursor-pointer"
           >
-            <Bell size={20} />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+            <Bell size={20} className="text-slate-800" />
+            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
           </button>
 
-          {notifyOpen && (
-            <div className="absolute -right-10 mt-2 w-76 bg-white border border-gray-400 rounded-xl shadow-lg overflow-hidden">
-              <div className="px-4 py-3 border-b border-gray-400 font-semibold">
-                Notifications
-              </div>
+          {/* Notification Dropdown */}
+          <div
+            className={`absolute right-0 mt-2 w-60 bg-white border border-gray-300 rounded-lg shadow-xl overflow-hidden transition-all duration-300 origin-top-right transform ${notifyOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
+              }`}
+          >
+            <div className="px-4 py-3 border-b border-gray-300 font-semibold bg-gray-50">
+              Notifications
+            </div>
 
-              <div className="flex gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                <img src="https://i.pravatar.cc/40?img=1" className="h-10 w-10 rounded-full" />
-                <div>
-                  <p className="text-sm">
-                    <span className="font-semibold">Marvel Studios</span> uploaded a new trailer
-                  </p>
-                  <p className="text-xs text-gray-500">2 hours ago</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                <img src="https://i.pravatar.cc/40?img=2" className="h-10 w-10 rounded-full" />
-                <div>
-                  <p className="text-sm">
-                    Stranger Things released a new teaser
-                  </p>
-                  <p className="text-xs text-gray-500">5 hours ago</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                <img src="https://i.pravatar.cc/40?img=3" className="h-10 w-10 rounded-full" />
-                <div>
-                  <p className="text-sm">
-                    Your video reached <b>10K views</b> 🎉
-                  </p>
-                  <p className="text-xs text-gray-500">Yesterday</p>
-                </div>
-              </div>
-
-              <div className="text-center py-2 text-sm text-blue-600 hover:bg-gray-50 cursor-pointer">
-                View all notifications
+            {/* Notification items container */}
+            <div className="flex flex-col">
+              <div className="text-center py-4 text-gray-500">
+                No new notifications
               </div>
             </div>
-          )}
+
+            <div className="text-center py-2 text-blue-600 hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+              View all notifications
+            </div>
+          </div>
         </div>
+
+
 
         {/* PROFILE */}
         <div className="relative" ref={profileRef}>
@@ -246,7 +227,7 @@ const Navbar = () => {
                 <BarChart className="text-indigo-500 group-hover:text-indigo-700" size={18} /> Reports & Analytics
               </Link>
               <Link
-                to="/settings"
+                to="/dashboard/checkEmail"
                 className="flex items-center gap-3 px-5 py-3 hover:bg-yellow-50 hover:text-yellow-700 transition-colors duration-200"
               >
                 <EmailTwoTone className="text-yellow-500 group-hover:text-yellow-700" size={18} /> Check mail
@@ -255,7 +236,7 @@ const Navbar = () => {
 
             {/* SIGN OUT */}
             <Link
-              to="/logout"
+              to="/"
               className="flex items-center gap-3 px-5 py-3 mt-1 bg-red-500 text-white rounded-b-xl hover:bg-red-600 font-semibold transition-colors duration-200"
             >
               <LogOut className="text-white" size={18} /> Sign Out

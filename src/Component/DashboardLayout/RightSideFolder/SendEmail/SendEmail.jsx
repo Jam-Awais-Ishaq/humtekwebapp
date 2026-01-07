@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { Mail, Edit3, MessageCircle } from "lucide-react";
 import { Context } from "../../../../Context/ContextProvider";
 
@@ -8,6 +8,8 @@ const SendEmail = () => {
         subject: "",
         message: "",
     });
+    const [attachments, setAttachments] = useState([]);
+    const fileInputRef = useRef();
 
     const { showStatusModal } = useContext(Context);
 
@@ -16,17 +18,36 @@ const SendEmail = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        setAttachments((prev) => [...prev, ...files]);
+        e.target.value = null;
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const files = Array.from(e.dataTransfer.files);
+        setAttachments((prev) => [...prev, ...files]);
+    };
+
+    const handleDragOver = (e) => e.preventDefault();
+
+    const removeAttachment = (index) => {
+        setAttachments((prev) => prev.filter((_, i) => i !== index));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Sending Email:", formData);
-        // TODO: API call to send email
+        console.log("Sending Email:", formData, attachments);
+        // TODO: API call to send email + attachments
         showStatusModal({
             type: "success",
             title: "Email Sent",
             message: "Your email has been sent successfully!",
             primaryButtonText: "OK",
-        })
+        });
         setFormData({ email: "", subject: "", message: "" });
+        setAttachments([]);
     };
 
     const inputClasses =
@@ -40,12 +61,14 @@ const SendEmail = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
             <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-6 md:p-10">
-                <h2 className="text-4xl font-bold text-slate-800 mb-6 flex items-center gap-2">  <Mail className="text-slate-800 md:w-12 md:h-12 peer-focus:text-blue-500 transition-colors" />  <span>Send Email</span> </h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <h2 className="text-4xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <Mail className="text-slate-800 md:w-12 md:h-12 peer-focus:text-blue-500 transition-colors" />{" "}
+                    <span>Send Email</span>
+                </h2>
 
-                    {/* Email + Subject in one line */}
+                <form onSubmit={handleSubmit} className="space-y-6" onDrop={handleDrop} onDragOver={handleDragOver}>
+                    {/* Email + Subject */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Email */}
                         <div className="relative">
                             <input
                                 type="email"
@@ -54,14 +77,13 @@ const SendEmail = () => {
                                 onChange={handleChange}
                                 className={inputClasses}
                                 required
-                                placeholder=" " // Important for floating label
+                                placeholder=" "
                             />
                             <label className={labelClasses}>
                                 <Mail className="w-4 h-4 text-gray-400 peer-focus:text-blue-500 transition-colors" /> Email
                             </label>
                         </div>
 
-                        {/* Subject */}
                         <div className="relative">
                             <input
                                 type="text"
@@ -91,6 +113,48 @@ const SendEmail = () => {
                         <label className={labelClasses}>
                             <MessageCircle className="w-4 h-4 text-gray-400 peer-focus:text-blue-500 transition-colors" /> Message
                         </label>
+                    </div>
+
+                    {/* File Attachments */}
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current.click()}
+                                className="flex items-center gap-1 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded transition"
+                            >
+                                📎 Attach File
+                            </button>
+                            <span className="text-gray-500 text-sm">Drag & drop files here</span>
+                            <input
+                                type="file"
+                                multiple
+                                ref={fileInputRef}
+                                className="hidden"
+                                onChange={handleFileSelect}
+                            />
+                        </div>
+
+                        {/* List of attachments */}
+                        {attachments.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-1">
+                                {attachments.map((file, i) => (
+                                    <div
+                                        key={i}
+                                        className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition"
+                                    >
+                                        📎 {file.name}
+                                        <button
+                                            type="button"
+                                            className="text-red-500 hover:text-red-700 font-bold"
+                                            onClick={() => removeAttachment(i)}
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Submit Button */}
