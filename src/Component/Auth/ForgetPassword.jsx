@@ -1,55 +1,80 @@
+import { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Context } from "../../Context/ContextProvider";
 
 const ForgetPassword = ({ onSuccess }) => {
   const [email, setEmail] = useState("");
   const [ntn, setNtn] = useState("");
   const [errors, setErrors] = useState({});
 
+  const { showStatusModal } = useContext(Context);
   const navigate = useNavigate();
   // Email regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  // Basic NTN regex (Pakistan style e.g. 1234567-8)
   const ntnRegex = /^[0-9]{7}-[0-9]{1}$/;
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(email)) {
-      newErrors.email = "Enter a valid email address";
-    }
-
-    if (!ntn.trim()) {
-      newErrors.ntn = "Company NTN is required";
-    } else if (!ntnRegex.test(ntn)) {
-      newErrors.ntn = "NTN format should be like 1234567-8";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
 
-    const data = { email, ntn };
-    setEmail("");
-    setNtn("");
+    // REQUIRED FIELDS CHECK
+    if (!email.trim() || !ntn.trim()) {
+      showStatusModal({
+        type: "warning",
+        title: "Missing Information",
+        message: "Please fill out all required fields before submitting.",
+        primaryButtonText: "OK"
+      });
+      return;
+    }
 
-    if (onSuccess) onSuccess(data); // call wrapper callback
+    // EMAIL VALIDATION
+    if (!emailRegex.test(email)) {
+      showStatusModal({
+        type: "error",
+        title: "Invalid Email",
+        message: "Please enter a valid email address.",
+        primaryButtonText: "OK"
+      });
+      return;
+    }
+
+    // NTN VALIDATION
+    if (!ntnRegex.test(ntn)) {
+      showStatusModal({
+        type: "error",
+        title: "Invalid NTN",
+        message: "NTN format must be like 1234567-8.",
+        primaryButtonText: "OK"
+      });
+      return;
+    }
+
+    // SUCCESS — If modal close then call onSuccess
+    showStatusModal({
+      type: "success",
+      title: "Verification Passed!",
+      message: "Email & NTN looks good.",
+      primaryButtonText: "Continue",
+      onPrimaryAction: () => {
+        const data = { email, ntn };
+        // reset form
+        setEmail("");
+        setNtn("");
+
+        if (onSuccess) onSuccess(data);
+      }
+    });
   };
 
 
+
   return (
-    <div className=" flex justify-center from-blue-50 via-white to-blue-100 px-4 sm:px-6 lg:px-8">
+    <div className=" flex justify-center from-blue-50 via-white to-blue-100 px-4 sm:px-3 lg:px-7">
       <div className="w-full max-w-md sm:max-w-lg">
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl p-3 sm:p-8"
+          className="bg-white rounded-2xl p-3 sm:p-6"
         >
           {/* Heading */}
           <div className="text-center mb-4">

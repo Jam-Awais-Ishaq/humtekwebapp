@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../../Context/ContextProvider';
 
-const LoginForm = ({ switchToRegister, isOpen, setOpenModal }) => {
+const LoginForm = ({ switchToRegister, setOpenModal }) => {
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -11,6 +12,7 @@ const LoginForm = ({ switchToRegister, isOpen, setOpenModal }) => {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
 
+  const { showStatusModal } = useContext(Context);
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -21,11 +23,24 @@ const LoginForm = ({ switchToRegister, isOpen, setOpenModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.email || !form.password) {
-      alert("Please fill in all fields");
+      // alert("Please fill in all fields.");
+      showStatusModal({
+        show: true,
+        message: "Please fill in all fields.",
+        type: "error"
+      })
+      console.log(showState)
       return;
     } else {
-      alert("Login successful!");
-      navigate('/dashboard')
+      showStatusModal({
+        show: true,
+        message: "Login Successful!",
+        type: "success",
+        primaryButtonText: "Go to Dashboard",
+        onPrimaryAction: ()=> {
+          navigate('/dashboard')
+        }
+      })
     }
 
     console.log("Email:", form.email);
@@ -47,7 +62,7 @@ const LoginForm = ({ switchToRegister, isOpen, setOpenModal }) => {
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
-              className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
 
             {/* Password with toggle */}
@@ -58,7 +73,7 @@ const LoginForm = ({ switchToRegister, isOpen, setOpenModal }) => {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="border border-gray-300 p-2 rounded w-full pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="border border-gray-300 p-3 rounded w-full pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               <div
                 className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500"

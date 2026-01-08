@@ -20,7 +20,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import { Link } from "react-router-dom";
 import imageLogo from "@/assets/Logo.jpeg"
 import { Context } from "../../Context/ContextProvider";
-import { AttachEmailTwoTone, Email, EmailTwoTone } from "@mui/icons-material";
+import { AdminPanelSettings, AttachEmailTwoTone, Email, EmailTwoTone } from "@mui/icons-material";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 const Navbar = () => {
   const [createOpen, setCreateOpen] = useState(false);
@@ -43,7 +43,7 @@ const Navbar = () => {
   const notifyRef = useRef(null);
 
 
-  const { userProfile, setUserProfile } = useContext(Context);
+  const { userProfile, setUserProfile, openChat, setChatOpen } = useContext(Context);
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -208,12 +208,11 @@ const Navbar = () => {
               >
                 <User className="text-blue-500 group-hover:text-blue-700" size={18} /> My Profile
               </Link>
-              <Link
-                to="/dashboard/invoices"
-                className="flex items-center gap-3 px-5 py-3 hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
+              <button  onClick={() => setChatOpen(true)}
+                className="flex items-center gap-3 px-5 py-3 cursor-pointer hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
               >
-                <FileDigit className="text-green-500 group-hover:text-green-700" size={18} /> Invoices
-              </Link>
+                <AdminPanelSettings className="text-green-500 group-hover:text-green-700" size={18} /> Chat with admin
+              </button>
               <Link
                 to="/dashboard/customers"
                 className="flex items-center gap-3 px-5 py-3 hover:bg-purple-50 hover:text-purple-700 transition-colors duration-200"
@@ -243,8 +242,6 @@ const Navbar = () => {
             </Link>
           </div>
         </div>
-
-
       </div>
     </nav>
   );

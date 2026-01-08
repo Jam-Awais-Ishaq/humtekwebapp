@@ -8,7 +8,7 @@ export const ContextProvider = ({ children }) => {
     const [invoices, setInvoices] = useState([]);
     const [editInvoice, setEditInvoice] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
-
+    const [openChat, setChatOpen] = useState(false);
 
     // User Profile Data 
     const [userProfile, setUserProfile] = useState({
@@ -41,7 +41,7 @@ export const ContextProvider = ({ children }) => {
         setStatusModal((prev) => ({ ...prev, open: false }));
     };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile }}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile,openChat, setChatOpen }}>
             {children}
 
 

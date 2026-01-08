@@ -10,13 +10,11 @@ const ForgetWrapper = ({ closeModal, onCloseModal }) => {
     // 1️⃣ ForgetPassword submit success
     const handleForgetSuccess = (data) => {
         setFormData(data); // store email & NTN
-        alert("Validation Successful!");
         setStep("otp"); // move to OTP step
     };
 
     // 2️⃣ OTP verify success
     const handleOTPSuccess = () => {
-        alert("OTP Verified!");
         setStep("reset"); // move to reset password step
     };
 

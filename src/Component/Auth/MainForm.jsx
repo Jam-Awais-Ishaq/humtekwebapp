@@ -29,12 +29,12 @@ const MainForm = () => {
         >
           <div className="relative w-full lg:w-1/2 overflow-hidden min-h-125">
             <div
-              className={`absolute inset-0 p-6 sm:p-8 transition-transform duration-700 ${isLogin ? "translate-x-0" : "-translate-x-full"
+              className={`absolute inset-0 p-6 sm:p-8  transition-transform duration-700 ${isLogin ? "translate-x-0" : "-translate-x-full"
                 }`}>
               <LoginForm setOpenModal={setOpenModal} switchToRegister={() => setIsLogin(false)} />
             </div>
             <div
-              className={`absolute inset-0 p-6 sm:p-8 transition-transform duration-700 ${isLogin ? "translate-x-full" : "translate-x-0"
+              className={`absolute inset-0 p-6 sm:p-1 -top-6 transition-transform duration-700 ${isLogin ? "translate-x-full" : "translate-x-0"
                 }`}
             >
               <Register switchToLogin={() => setIsLogin(true)} />

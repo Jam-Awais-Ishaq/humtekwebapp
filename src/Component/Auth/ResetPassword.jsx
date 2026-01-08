@@ -108,7 +108,7 @@ const ResetPassword = ({ onSuccessModel }) => {
         <div className="w-full max-w-md sm:max-w-lg">
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-2xl p-6 sm:p-8"
+            className="bg-white rounded-2xl p-6 sm:p-3"
           >
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800">
@@ -120,7 +120,7 @@ const ResetPassword = ({ onSuccessModel }) => {
             </div>
 
             {/* Password */}
-            <div className="mb-5 relative">
+            <div className="mb-3 relative">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 New Password
               </label>
@@ -179,8 +179,8 @@ const ResetPassword = ({ onSuccessModel }) => {
             <button
               type="submit"
               disabled={form.loading}
-              className="py-3 rounded text-white font-semibold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500
-                         hover:bg-gradient-to-r hover:from-red-500 hover:via-purple-500 hover:to-pink-500
+              className="py-3 rounded text-white font-semibold bg-linear-to-r from-purple-500 via-pink-500 to-red-500
+                         hover:bg-linear-to-r hover:from-red-500 hover:via-purple-500 hover:to-pink-500
                          transition-colors duration-700 w-full cursor-pointer"
             >
               {form.loading ? "Resetting..." : "Reset Password"}

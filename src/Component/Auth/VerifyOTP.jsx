@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Context } from "../../Context/ContextProvider";
 
 const VerifyOTP = ({ onSuccess }) => {
 
@@ -8,6 +9,8 @@ const VerifyOTP = ({ onSuccess }) => {
     error: "",
     timeLeft: 60, // ⏱️ TIMER STATE
   });
+
+  const {showStatusModal} = useContext(Context)
 
   // ================= TIMER CODE =================
   useEffect(() => {
@@ -32,37 +35,70 @@ const VerifyOTP = ({ onSuccess }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.otp) {
-      setForm({ ...form, error: "OTP is required" });
+    // EMPTY OTP
+    if (!form.otp.trim()) {
+      showStatusModal({
+        type: "warning",
+        title: "OTP Required",
+        message: "Please enter your OTP before verifying.",
+        primaryButtonText: "OK"
+      });
       return;
     }
 
+    // WRONG FORMAT
     if (!/^[0-9]{6}$/.test(form.otp)) {
-      setForm({ ...form, error: "OTP must be 6 digits" });
+      showStatusModal({
+        type: "error",
+        title: "Invalid OTP",
+        message: "OTP must be exactly 6 digits.",
+        primaryButtonText: "OK"
+      });
       return;
     }
 
-    console.log("OTP Verified:", form.otp);
-    if (onSuccess) onSuccess();
+    // CORRECT OTP
+    showStatusModal({
+      type: "success",
+      title: "OTP Verified!",
+      message: "Your OTP has been successfully verified.",
+      primaryButtonText: "Continue",
+      onPrimaryAction: () => {
+        setForm((prev) => ({ ...prev, otp: "" }));
 
+        if (onSuccess) onSuccess(); // wrapper callback
+      }
+    });
   };
+
   // ================================================
 
   // ================= RESEND OTP =================
   const handleResend = () => {
-    // Backend call for new OTP can go here
-    console.log("OTP Resent");
+    // backend call here if needed
 
-    // Reset timer
-    setForm((prev) => ({ ...prev, timeLeft: 60, otp: "", error: "" }));
+    showStatusModal({
+      type: "info",
+      title: "OTP Sent",
+      message: "A new OTP has been sent to your email/phone.",
+      primaryButtonText: "OK",
+      onPrimaryAction: () => {
+        setForm((prev) => ({
+          ...prev,
+          timeLeft: 60,
+          otp: "",
+        }));
+      }
+    });
   };
+
   // ===============================================
 
   return (
     <div className="flex items-center justify-center  px-4 sm:px-6">
       <div className="w-full max-w-md sm:max-w-lg">
         <form
-          className="bg-white rounded-2xlp-6 sm:p-8"
+          className="bg-white rounded-2xlp-6 sm:p-7"
           onSubmit={handleSubmit}
         >
           <div className="text-center mb-8">
@@ -105,8 +141,8 @@ const VerifyOTP = ({ onSuccess }) => {
           <button
             type="submit"
             disabled={form.timeLeft === 0}
-            className="py-3 rounded text-white font-semibold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500
-                         hover:bg-gradient-to-r hover:from-red-500 hover:via-purple-500 hover:to-pink-500
+            className="py-3 rounded text-white font-semibold bg-linear-to-r from-purple-500 via-pink-500 to-red-500
+                         hover:bg-linear-to-r hover:from-red-500 hover:via-purple-500 hover:to-pink-500
                          transition-colors duration-700 cursor-pointer w-full"
           >
             Verify OTP

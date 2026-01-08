@@ -9,7 +9,12 @@ import CustomerPage from "./RightSideFolder/CustomerPage";
 import CompanyProfileSettings from "./RightSideFolder/CompanyProfileSettings";
 import SendEmail from "./RightSideFolder/SendEmail/SendEmail";
 import CheckEmail from "./RightSideFolder/SendEmail/CheckEmail";
+import { useContext } from "react";
+import { Context } from "../../Context/ContextProvider";
+import ChatSidePanel from "./ChatSystem/ChatSidePanel";
 const MainDashboard = () => {
+
+    const { openChat, setChatOpen } = useContext(Context);
     return (
         <>
             <Routes>
@@ -25,6 +30,7 @@ const MainDashboard = () => {
                     <Route path="checkEmail" element={<CheckEmail />} />
                 </Route>
             </Routes>
+            <ChatSidePanel isOpen={openChat} onClose={() => setChatOpen(false)} />
         </>
     );
 };
