@@ -1,27 +1,24 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   Dashboard,
   Analytics,
   Inventory,
   ReceiptLong,
   People,
-  Settings,
   Logout,
   Menu,
-  ChevronLeft,
-  ChevronRight,
 } from "@mui/icons-material";
 import { FaBars } from "react-icons/fa6";
 import imgLogo from "@/assets/Logo.jpeg";
 import { Profiler } from "react";
-import { User } from "lucide-react";
+import { Crown, User } from "lucide-react";
 const menuItems = [
-  { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
-  { text: "Analytics", icon: <Analytics />, path: "/dashboard/analytics" },
+  { text: "Dashboard", icon: <Dashboard />, path: "/dashboard", end: true },
+  { text: "Analytics", icon: <Analytics />, path: "/dashboard/analytics", end: true },
   { text: "Products", icon: <Inventory />, path: "/dashboard/products" },
-  { text: "Invoices", icon: <ReceiptLong />, path: "/dashboard/invoices" },
-  { text: "Customers", icon: <People />, path: "/dashboard/customers" },
-  { text: "Profile", icon: <User />, path: "/dashboard/profile" },
+  { text: "Invoices", icon: <ReceiptLong />, path: "/dashboard/invoices", end: true },
+  { text: "Customers", icon: <People />, path: "/dashboard/customers", end: true },
+  { text: "Profile", icon: <User />, path: "/dashboard/profile", end: true },
 ];
 
 const SideBar = ({
@@ -90,42 +87,82 @@ ${collapsed
             <NavLink
               key={item.text}
               to={item.path}
+              end={item.end}
               onClick={handleDrawerToggle}
               className={({ isActive }) =>
                 `
-                group relative flex items-center gap-2 px-3 py-2 mt-2 rounded-lg
-                transition-all duration-300
-                ${isActive
+    group relative flex items-center gap-2 px-3 py-2 rounded-lg
+    transition-colors transition-background duration-200
+    ${isActive
                   ? "bg-linear-to-r from-purple-500 via-pink-500 to-red-500 text-white"
-                  : "hover:bg-linear-to-r text-gray-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 hover:text-white"
+                  : "text-gray-600 hover:text-white hover:bg-linear-to-r hover:from-purple-500 hover:via-pink-500 hover:to-red-500"
                 }
-              `
+  `
               }
             >
               <span>{item.icon}</span>
 
-              {!collapsed && <span className={` transition-all duration-200
-${collapsed ? "opacity-0 -translate-x-2.5 pointer-events-none" : "opacity-100 translate-x-0 delay-400"
-                } ml-1`}>{item.text}</span>}
+              {!collapsed && (
+                <span
+                  className={`
+        transition-opacity  duration-200 ml-1
+        ${collapsed
+                      ? "opacity-0 -translate-x-2 pointer-events-none"
+                      : "opacity-100 translate-x-0 delay-150"
+                    }
+      `}
+                >
+                  {item.text}
+                </span>
+              )}
 
-              {/* TOOLTIP */}
+              {/* Tooltip for collapsed */}
               {collapsed && (
                 <span className="absolute left-full ml-3 px-2 py-1 text-sm rounded bg-gray-800 text-white opacity-0 group-hover:opacity-100 whitespace-nowrap">
                   {item.text}
                 </span>
               )}
             </NavLink>
+
           ))}
         </nav>
         <div className="absolute bottom-4 w-full px-2">
-          <button className="group relative flex items-center text-gray-600 gap-3 w-full px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500 hover:text-white transition">
-            <Logout />
-            {!collapsed && <span>Logout</span>}
+
+          {/* UPGRADE BUTTON */}
+          <button
+            className={`
+    group relative flex items-center cursor-pointer justify-center gap-2
+    w-full px-3 py-2 rounded-lg font-semibold shadow
+    transition-color duration-200 
+    bg-linear-to-r from-yellow-500 to-orange-500 text-white
+    hover:shadow-lg
+    ${collapsed ? "justify-center" : "justify-start"}
+  `}
+          >
+            <Crown size={18} />
+
+            {!collapsed && <span>Upgrade Plan</span>}
+
             {collapsed && (
-              <span className="absolute left-full ml-3 px-2 py-1 text-sm rounded bg-gray-800  text-white opacity-0 group-hover:opacity-100">
-                Logout
+              <span className="
+      absolute left-full ml-3 px-2 py-1 text-sm rounded bg-gray-800
+      text-white whitespace-nowrap opacity-0 group-hover:opacity-100
+    ">
+                Upgrade Plan
               </span>
             )}
+          </button>
+
+          <button className="group relative flex items-center text-gray-600 gap-3 mt-1 w-full px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500 hover:text-white transition">
+            <Link to="/">
+              <Logout />
+              {!collapsed && <span>Logout</span>}
+              {collapsed && (
+                <span className="absolute left-full ml-3 px-2 py-1 text-sm rounded bg-gray-800  text-white opacity-0 group-hover:opacity-100">
+                  Logout
+                </span>
+              )}
+            </Link>
           </button>
         </div>
       </aside>

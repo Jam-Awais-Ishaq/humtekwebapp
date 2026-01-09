@@ -122,12 +122,12 @@ const Navbar = () => {
               <AttachEmailTwoTone size={18} className="text-purple-600" /> Send email
             </Link>
 
-            <Link
+            {/* <Link
               to="/dashboard/payments"
               className="flex items-center gap-2 px-4 py-3 hover:bg-yellow-50 hover:text-yellow-700 transition-colors duration-200"
             >
               <CreditCard size={18} className="text-yellow-600" /> New Payment
-            </Link>
+            </Link> */}
             <Link
               to="/dashboard/invoices"
               className="flex items-center gap-2 px-4 py-3 hover:bg-yellow-50 hover:text-yellow-700 transition-colors duration-200"
