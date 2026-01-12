@@ -4,19 +4,12 @@ import {
   Plus,
   Bell,
   User,
-  Settings,
   LogOut,
-  Moon,
-  Building,
   BarChart,
-  FileDigit,
   Users,
-  CreditCard,
-  Package,
-  BarChart2,
   FilePlus,
+  File,
 } from "lucide-react";
-import PeopleIcon from '@mui/icons-material/People';
 import { Link } from "react-router-dom";
 import imageLogo from "@/assets/Logo.jpeg"
 import { Context } from "../../Context/ContextProvider";
@@ -116,12 +109,18 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/dashboard/sendEmail"
+              to="/dashboard/sendEmails"
               className="flex items-center gap-2 px-4 py-3 hover:bg-purple-50 hover:text-purple-700 transition-colors duration-200"
             >
               <AttachEmailTwoTone size={18} className="text-purple-600" /> Send email
             </Link>
 
+            <Link
+              to="/dashboard/estimates"
+              className="flex items-center gap-2 px-4 py-3 hover:bg-yellow-50 hover:text-yellow-700 transition-colors duration-200"
+            >
+              <File size={18} className="text-yellow-600" /> Total Estimate
+            </Link>
             {/* <Link
               to="/dashboard/payments"
               className="flex items-center gap-2 px-4 py-3 hover:bg-yellow-50 hover:text-yellow-700 transition-colors duration-200"
@@ -203,7 +202,7 @@ const Navbar = () => {
             {/* ACTION LINKS */}
             <div className="flex flex-col">
               <Link
-                to="/dashboard/profile"
+                to="/dashboard/profiles"
                 className="flex items-center gap-3 px-5 py-3 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200"
               >
                 <User className="text-blue-500 group-hover:text-blue-700" size={18} /> My Profile
@@ -226,7 +225,7 @@ const Navbar = () => {
                 <BarChart className="text-indigo-500 group-hover:text-indigo-700" size={18} /> Reports & Analytics
               </Link>
               <Link
-                to="/dashboard/checkEmail"
+                to="/dashboard/checkEmails"
                 className="flex items-center gap-3 px-5 py-3 hover:bg-yellow-50 hover:text-yellow-700 transition-colors duration-200"
               >
                 <EmailTwoTone className="text-yellow-500 group-hover:text-yellow-700" size={18} /> Check mail

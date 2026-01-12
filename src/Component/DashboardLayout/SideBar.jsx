@@ -10,7 +10,6 @@ import {
 } from "@mui/icons-material";
 import { FaBars } from "react-icons/fa6";
 import imgLogo from "@/assets/Logo.jpeg";
-import { Profiler } from "react";
 import { Crown, User } from "lucide-react";
 const menuItems = [
   { text: "Dashboard", icon: <Dashboard />, path: "/dashboard", end: true },
@@ -18,7 +17,7 @@ const menuItems = [
   { text: "Products", icon: <Inventory />, path: "/dashboard/products" },
   { text: "Invoices", icon: <ReceiptLong />, path: "/dashboard/invoices", end: true },
   { text: "Customers", icon: <People />, path: "/dashboard/customers", end: true },
-  { text: "Profile", icon: <User />, path: "/dashboard/profile", end: true },
+  { text: "Profile", icon: <User />, path: "/dashboard/profiles", end: true },
 ];
 
 const SideBar = ({

@@ -13,7 +13,7 @@ const InvoicesPage = () => {
 
   const filteredInvoices = invoices.filter(
     (inv) =>
-      inv.branch.toLowerCase().includes(search.toLowerCase()) ||
+      inv.branchCode.toLowerCase().includes(search.toLowerCase()) ||
       inv.bankName.toLowerCase().includes(search.toLowerCase()) ||
       inv.product.toLowerCase().includes(search.toLowerCase())
   );
@@ -30,7 +30,6 @@ const InvoicesPage = () => {
   };
 
   const handleEditsInvoice = (invoice) => {
-    // Navigate to edit page
 
     setEditInvoice(invoice);
     setIsEditMode(true);
@@ -68,12 +67,12 @@ const InvoicesPage = () => {
               <thead className="bg-gray-100 sticky top-0 z-10">
                 <tr>
                   <th className="px-4 py-3 font-semibold text-gray-700">Bank</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">Branch</th>
+                  <th className="px-4 py-3 font-semibold text-gray-700">Branch Code</th>
                   <th className="px-4 py-3 font-semibold text-gray-700">
-                    Branch Code
+                    Machine Serial No
                   </th>
                   <th className="px-2 py-3 font-semibold text-gray-700">
-                    Product
+                    Model Name
                   </th>
                   <th className="px-4 py-3 font-semibold text-gray-700">
                     Service
@@ -97,9 +96,9 @@ const InvoicesPage = () => {
                       <td className="px-4 py-3 font-medium">
                         {inv.bankName}
                       </td>
-                      <td className="px-4 py-3">{inv.branch}</td>
+                      <td className="px-4 py-3">{inv.branchCode}</td>
                       <td className="px-4 py-3 text-gray-600">
-                        {inv.branchCode}
+                        {inv.machineSerial}
                       </td>
                       <td className="px-4 py-3">{inv.product}</td>
 

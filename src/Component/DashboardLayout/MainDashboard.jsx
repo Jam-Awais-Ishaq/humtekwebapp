@@ -12,6 +12,7 @@ import CheckEmail from "./RightSideFolder/SendEmail/CheckEmail";
 import { useContext } from "react";
 import { Context } from "../../Context/ContextProvider";
 import ChatSidePanel from "./ChatSystem/ChatSidePanel";
+import EstimatePage from "./EstimatePage/EstimatePage";
 const MainDashboard = () => {
 
     const { openChat, setChatOpen } = useContext(Context);
@@ -25,9 +26,10 @@ const MainDashboard = () => {
                     <Route path="products" element={<ProductsPage />} />
                     <Route path="invoices" element={<InvoicesPage />} />
                     <Route path="customers" element={<CustomerPage />} />
-                    <Route path="profile" element={<CompanyProfileSettings />} />
-                    <Route path="sendEmail" element={<SendEmail />} />
-                    <Route path="checkEmail" element={<CheckEmail />} />
+                    <Route path="profiles" element={<CompanyProfileSettings />} />
+                    <Route path="estimates" element={<EstimatePage />} />
+                    <Route path="sendEmails" element={<SendEmail />} />
+                    <Route path="checkEmails" element={<CheckEmail />} />
                 </Route>
             </Routes>
             <ChatSidePanel isOpen={openChat} onClose={() => setChatOpen(false)} />

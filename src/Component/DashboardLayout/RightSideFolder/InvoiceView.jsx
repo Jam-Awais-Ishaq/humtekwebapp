@@ -32,9 +32,11 @@ const InvoiceView = ({ invoice, onClose }) => {
             {/* INFO GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <Info label="Bank Name" value={invoice.bankName} />
-                <Info label="Branch" value={invoice.branch} />
-                <Info label="Branch Code" value={invoice.branchCode} />
+                <Info label="Branch Code" value={invoice.branch} />
+                <Info label="Category" value={invoice.category} />
                 <Info label="Machine Model" value={invoice.product} />
+                <Info label="Parts" value={invoice.parts} />
+                <Info label="Machine Serial" value={invoice.machineSerial} />
                 <Info label="Service Type" value={invoice.serviceType} />
                 <Info label="Service Date" value={invoice.serviceDate || "-"} />
                 <Info label="Invoice Date" value={invoice.invoiceDate || "-"} />
