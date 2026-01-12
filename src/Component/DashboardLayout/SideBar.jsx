@@ -9,7 +9,7 @@ import {
   Menu,
 } from "@mui/icons-material";
 import { FaBars } from "react-icons/fa6";
-import imgLogo from "@/assets/Logo.jpeg";
+import imgLogo from "@/assets/Logo.jpeg";     
 import { Crown, User } from "lucide-react";
 const menuItems = [
   { text: "Dashboard", icon: <Dashboard />, path: "/dashboard", end: true },
