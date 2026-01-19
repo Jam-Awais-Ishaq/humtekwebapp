@@ -12,7 +12,7 @@ import CheckEmail from "./RightSideFolder/SendEmail/CheckEmail";
 import { useContext } from "react";
 import { Context } from "../../Context/ContextProvider";
 import ChatSidePanel from "./ChatSystem/ChatSidePanel";
-import EstimatePage from "./EstimatePage/EstimatePage";
+import EstimatePage from "./RightSideFolder/EstimatePage/EstimatePage";
 const MainDashboard = () => {
 
     const { openChat, setChatOpen } = useContext(Context);

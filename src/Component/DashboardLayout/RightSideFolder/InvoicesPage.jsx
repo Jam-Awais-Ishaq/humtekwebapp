@@ -7,7 +7,7 @@ import BankServiceInvoiceForm from "./ProductPage/BankServiceInvoiceForm";
 
 const InvoicesPage = () => {
 
-  const { invoices, setInvoices, openModal, setOpenModal, showStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode } = useContext(Context);
+  const { invoices, setInvoices, openModal, setOpenModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode } = useContext(Context);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [search, setSearch] = useState("");
 

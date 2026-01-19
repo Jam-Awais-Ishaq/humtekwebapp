@@ -7,10 +7,10 @@ const EstimateCustomerInfo = ({ form, handleChange }) => {
         <div className="flex flex-col">
           <label className="text-green-600 font-medium mb-1">Bank Name</label>
           <input
-            name="customerName"
-            value={form.customerName}
+            name="bankName"
+            value={form.bankName}
             onChange={handleChange}
-            placeholder="Enter customer name"
+            placeholder="Enter bank name"
             className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>

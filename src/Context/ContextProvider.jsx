@@ -17,7 +17,6 @@ export const ContextProvider = ({ children }) => {
         companyName: "",
     });
 
-
     // Generic alert modal state
     const [statusModal, setStatusModal] = useState({
         open: false,
@@ -41,7 +40,7 @@ export const ContextProvider = ({ children }) => {
         setStatusModal((prev) => ({ ...prev, open: false }));
     };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile,openChat, setChatOpen }}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen }}>
             {children}
 
 
