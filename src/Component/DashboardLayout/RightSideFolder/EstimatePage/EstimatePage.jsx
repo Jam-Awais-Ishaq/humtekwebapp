@@ -43,7 +43,7 @@ export default function EstimatePage() {
       ...prev,
       items: [
         ...prev.items,
-        { partName: "", legend1: "", legend2: "", qty: 1, price: 0 },
+        { partName: "", qty: 1, tax: 0, price: 0 },
       ],
     }));
   };
@@ -68,14 +68,19 @@ export default function EstimatePage() {
 
   const handleSubmit = () => {
     if (isEditing && selected) {
-      // UPDATE MODE
+      const updatedItem = {
+        ...selected,
+        ...form,
+        machine: form.machineName,
+        model: form.machineModel,
+      };
+
       setEstimates(prev =>
-        prev.map(e =>
-          e.id === selected.id
-            ? { ...selected, ...form }
-            : e
-        )
+        prev.map(e => e.id === selected.id ? updatedItem : e)
       );
+
+      // NEW → sync selected with updated
+      setSelected(updatedItem);
     } else {
       // CREATE MODE
       const newEstimate = {
@@ -113,25 +118,27 @@ export default function EstimatePage() {
   }
 
   const handleEdit = (item) => {
-    setIsEditing(true);
-    setSelected(item);
+    const fresh = estimates.find(e => e.id === item.id) || item;
 
-    // prefill form
+    setIsEditing(true);
+    setSelected(fresh);
+
     setForm({
-      bankName: item.bankName,
-      branchName: item.branchName,
-      branchAddress: item.branchAddress,
-      machineName: item.machine,
-      machineModel: item.model,
-      complaintNo: item.complaintNo,
-      estimateNo: item.estimateNo,
-      estimateDate: item.estimateDate,
-      items: item.items,
-      parts: item.parts,
+      bankName: fresh.bankName,
+      branchName: fresh.branchName,
+      branchAddress: fresh.branchAddress,
+      machineName: fresh.machine,
+      machineModel: fresh.model,
+      complaintNo: fresh.complaintNo,
+      estimateNo: fresh.estimateNo,
+      estimateDate: fresh.estimateDate,
+      items: fresh.items,
+      parts: fresh.parts,
     });
 
     setOpenModal(true);
   };
+
 
 
   const filteredEstimates = estimates.filter(e => {
@@ -249,7 +256,7 @@ export default function EstimatePage() {
         {isEditing ? (
           <>
             <EstimateCustomerInfo form={form} handleChange={handleChange} />
-            <EstimateMachineInfo form={form} handleChange={handleChange} handlePartsChange={handlePartsChange} />
+            <EstimateMachineInfo handleChange={handleChange} allMachineNames={["Counting Machine", "Shrink Wraping Machine", "Bundle Binding Machine", "Hitachi"]} form={form} handlePartsChange={handlePartsChange} />
             <PartsTable items={form.items} handleAddItem={handleAddItem} handleItemChange={handleItemChange} />
 
             <button

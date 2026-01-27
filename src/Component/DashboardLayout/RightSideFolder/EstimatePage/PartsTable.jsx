@@ -25,10 +25,14 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
           <tbody>
             {items.map((row, i) => {
               // Display empty string if 0 for better UX
-              const displayQty = row.qty === 0 ? "" : row.qty;
-              const displayPrice = row.price === 0 ? "" : row.price;
-              const displayTax = row.tax === 0 ? "" : row.tax;
-              const total = (row.qty || 0) * (row.price || 0) + (row.tax || 0);
+              const qty = row.qty || 0;
+              const price = row.price || 0;
+              const taxPercent = row.tax || 0;
+
+              const subTotal = qty * price;
+              const taxAmount = (subTotal * taxPercent) / 100;
+              const total = subTotal + taxAmount;
+
 
               return (
                 <tr key={i} className="border-b border-gray-200">
@@ -45,7 +49,7 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      value={displayQty}
+                      value={row.qty ?? ""}
                       onChange={(e) => handleItemChange(i, "qty", Number(e.target.value))}
                       min={0}
                     />
@@ -54,7 +58,7 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      value={displayPrice}
+                      value={row.price ?? ""}
                       onChange={(e) => handleItemChange(i, "price", Number(e.target.value))}
                       min={0}
                     />
@@ -62,7 +66,7 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
                   <td className="p-3">
                     <input
                       type="number"
-                      value={displayTax}
+                      value={row.tax ?? ""}
                       onChange={(e) => handleItemChange(i, "tax", Number(e.target.value))}
                       className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       min={0}

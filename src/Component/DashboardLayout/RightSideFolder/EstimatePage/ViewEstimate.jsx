@@ -1,11 +1,15 @@
 // ✅ ViewEstimate – Parts Table with Totals
-
 export const ViewEstimate = ({ data }) => {
   if (!data) return null;
 
+  const calculateTotalWithTax = (qty, price, taxPercent) => {
+    const subTotal = Number(qty || 0) * Number(price || 0);
+    const taxAmount = (subTotal * Number(taxPercent || 0)) / 100;
+    return subTotal + taxAmount;
+  };
   // calculate totals
   const partsTotal = data.items?.reduce(
-    (acc, item) => acc + (item.qty * item.price) + (item.tax || 0),
+    (acc, item) => acc + calculateTotalWithTax(item.qty, item.price, item.tax),
     0
   ) || 0;
 
@@ -66,7 +70,7 @@ export const ViewEstimate = ({ data }) => {
               {/* Table Body */}
               <tbody>
                 {data.items.map((item, index) => {
-                  const total = (item.qty * item.price) + (item.tax || 0);
+                  const total = calculateTotalWithTax(item.qty, item.price, item.tax);
                   return (
                     <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50 transition">
                       <td className="px-4 py-2">{item.partName}</td>
