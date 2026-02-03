@@ -1,36 +1,53 @@
 import MainDashboard from './Component/DashboardLayout/MainDashboard'
 import { useState } from 'react';
 import EstimatePreview from './utils/EstimatePreview';
+import InvoicePreview from './utils/InvoicePreview';
 function App() {
 
-  // const [estimate, setEstimate] = useState({
-  //   estimateNo: "EST-001",
-  //   estimateDate: "2026-01-22",
-  //   validTill: "2026-02-05",
-  //   bankName: "ABC Bank",
-  //   branchName: "Main Branch",
-  //   branchAddress: "123 Street, City",
-  //   complaintNo: "CMP-123",
-  //   machine: "Printer",
-  //   model: "PX-1000",
-  //   items: [
-  //     { name: "Part A", qty: 2, price: 500, total: 1000 },
-  //     { name: "Part B", qty: 1, price: 750, total: 750 },
-  //   ],
-  //   subtotal: 1750,
-  //   tax: 18,
-  //   taxAmount: 315,
-  //   total: 2065,
-  //   note: "Urgent repair",
-  //   terms: "Payment within 30 days",
+  // const [invoice] = useState({
   //   id: 1,
+  //   bankName: "Dubai islami bank",
+  //   branch: "Main Branch",
+  //   branchCode: "BR-101",
+  //   product: "Printer PX-1000",
+  //   serviceType: "Repair",
+  //   serviceDate: "2026-01-20",
+  //   invoiceDate: "2026-01-22",
+  //   dueDate: "2026-02-05",
+  //   status: "Pending",
+  //   items: [
+  //     {
+  //       serviceDescription: "Parts replacement",
+  //       qty: 1,
+  //       amount: 1750,
+  //       taxPercent: 18,
+  //       tax: 315,
+  //       totalAmount: 2065,
+  //     },
+  //     {
+  //       serviceDescription: "Website Development",
+  //       qty: 2,
+  //       amount: 5000,
+  //       taxPercent: 10,
+  //       tax: 1000,
+  //       totalAmount: 6000,
+  //     },
+  //     {
+  //       serviceDescription: "Website Development",
+  //       qty: 2,
+  //       amount: 5000,
+  //       taxPercent: 10,
+  //       tax: 1000,
+  //       totalAmount: 6000,
+  //     },
+  //   ]
   // });
   return (
     <>
 
-      {/* <div className="App">
-        <h1 className="text-2xl font-bold mb-4">Estimate PDF Preview</h1>
-        <EstimatePreview estimate={estimate} />
+      {/* <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Invoice PDF Preview</h1>
+        <InvoicePreview invoice={invoice} />
       </div> */}
       <MainDashboard />
     </>

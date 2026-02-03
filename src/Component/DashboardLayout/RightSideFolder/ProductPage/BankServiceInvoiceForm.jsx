@@ -13,30 +13,27 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   const [invoice, setInvoice] = useState(
     editInvoice || {
       bankName: "",
-      // branch: "",
       branchCode: "",
       machineModel: "",
       machineSerial: "",
-      serviceType: "Maintenance",
-      serviceDescription: "",
-      serviceDate: "",
+      qty: 0,
       invoiceDate: "",
-      dueDate: "",
       amount: "",
       tax: 0,
       status: "Pending",
       category: "",
       selectedMachines: [],
       parts: [],
-      partsInput: "",
     }
   );
 
-  const categories = {
-    "Cash Deposit": ["CDM-200", "CDM-500", "CDM-Pro"],
-    "ATM Machines": ["SL45", "SL60", "Hyosung MX280", "SL50"],
-    "Cheque Machines": ["Cheque-Scan-100", "Cheque-Max"],
-  };
+  const categories = [
+    "Counting Machine",
+    "Bundle Binding Machines",
+    "Shrink Wraping Machines",
+    "Stuffing Machines",
+  ];
+
 
   const handleChange = (e) => {
     setInvoice({ ...invoice, [e.target.name]: e.target.value });
@@ -45,17 +42,31 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   const totalAmount =
     Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
 
+
+  const partsTotal = invoice.parts.reduce(
+    (sum, p) => sum + Number(p.total || 0),
+    0
+  );
+
+  const serviceTotal =
+    Number(invoice.amount) +
+    (Number(invoice.amount) * Number(invoice.tax)) / 100;
+
+  const finalTotal = serviceTotal + partsTotal;
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    console.log("FINAL INVOICE DATA 👉", invoice);
 
     const newInvoice = {
       ...invoice,
       id: editInvoice ? editInvoice.id : Date.now(),
-      totalAmount,
-      product: invoice.selectedMachines.join(", "),
-      // branch: invoice.branch,
+      totalAmount: finalTotal,
+      product: invoice.machineModel,
       branchCode: invoice.branchCode,
-      category: invoice.category,  // ← add this
+      qty: invoice.qty,
+      category: invoice.category,
       parts: invoice.parts,
     };
 
@@ -98,7 +109,7 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
         />
 
         {/* SERVICE INFO */}
-        <ServiceSection invoice={invoice} handleChange={handleChange} totalAmount={totalAmount} isEditMode={isEditMode} />
+        <ServiceSection invoice={invoice} setInvoice={setInvoice} handleChange={handleChange} totalAmount={totalAmount} isEditMode={isEditMode} />
       </form>
     </div>
   );

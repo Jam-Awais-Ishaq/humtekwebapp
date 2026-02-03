@@ -1,111 +1,97 @@
+import { useEffect, useRef, useState } from "react";
 const MachineSection = ({ invoice, setInvoice, categories }) => {
+  const [search, setSearch] = useState("");
+  const [filteredCategories, setFilteredCategories] = useState(categories);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Filter categories based on input
+  useEffect(() => {
+    if (!search) {
+      setFilteredCategories(categories);
+      return;
+    }
+    const filtered = categories.filter((cat) =>
+      cat.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredCategories(filtered);
+  }, [search, categories]);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // 1️⃣ Sync search input with invoice.category (for edit mode)
+  useEffect(() => {
+    setSearch(invoice.category || "");
+  }, [invoice.category]);
+
+  // 2️⃣ Select category function
+  const selectCategory = (cat) => {
+    setInvoice({
+      ...invoice,
+      category: cat,
+      // reset machineModel ONLY if it was empty before
+      machineModel: invoice.machineModel ? invoice.machineModel : "",
+    });
+
+    setSearch(cat);
+    setShowDropdown(false);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       {/* ===== GROUP 1: CATEGORY + MACHINE ===== */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
-        {/* CATEGORY */}
-        <div className="flex-1">
+      <div className="flex gap-6">
+        {/* ===== CATEGORY ===== */}
+        <div className="relative flex-1" ref={dropdownRef}>
           <label className="font-semibold block mb-1">Category</label>
-          <select
-            className="w-full cursor-pointer px-3 py-3.5 border border-gray-300 focus:border-green-600 rounded transition duration-300 ease-in-out"
-            value={invoice.category}
-            onChange={(e) =>
-              setInvoice({ ...invoice, category: e.target.value, selectedMachines: [] })
-            }
-          >
-            <option value="">Select Category</option>
-            {Object.keys(categories).map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+          <input
+            type="text"
+            placeholder="Search category..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setShowDropdown(true);
+            }}
+            onFocus={() => setShowDropdown(true)}
+            className="w-full px-3 py-3.5 border border-gray-300 rounded focus:border-green-600 focus:ring-1 focus:ring-green-500"
+          />
+
+          {showDropdown && filteredCategories.length > 0 && (
+            <div className="absolute top-full left-0 right-0 bg-white border rounded mt-1 shadow max-h-48 overflow-y-auto z-50">
+              {filteredCategories.map((cat) => (
+                <div
+                  key={cat}
+                  className="px-4 py-2 cursor-pointer hover:bg-green-300"
+                  onClick={() => selectCategory(cat)}>
+                  {cat}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* MACHINE MODEL */}
-        <div className="flex-1">
+        {/* ===== MACHINE MODEL (TEXT INPUT) ===== */}
+        {/* <div className="flex-1">
           <label className="font-semibold block mb-1">Machine Model</label>
-          <div className="border rounded p-2 flex gap-2 items-center transition-all duration-300 ease-in-out
-                  flex-nowrap overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-            {invoice.selectedMachines.map((m) => (
-              <span
-                key={m}
-                className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm cursor-pointer select-none flex-shrink-0"
-                onClick={() =>
-                  setInvoice({
-                    ...invoice,
-                    selectedMachines: invoice.selectedMachines.filter((x) => x !== m),
-                  })
-                }
-              >
-                {m} ✕
-              </span>
-            ))}
-
-            <select
-              className="px-2 py-1 rounded border flex-shrink-0 cursor-pointer"
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val && !invoice.selectedMachines.includes(val)) {
-                  setInvoice({
-                    ...invoice,
-                    selectedMachines: [...invoice.selectedMachines, val],
-                  });
-                }
-              }}
-            >
-              <option value="">Select Machine</option>
-              {invoice.category &&
-                categories[invoice.category].map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* ===== GROUP 2: PARTS + SERIAL ===== */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
-        {/* MACHINE PARTS */}
-        <div className="flex-1">
-          <label className="font-semibold block mb-1">Machine Parts</label>
-          <div className="border rounded p-2 flex flex-wrap gap-2 items-center transition-all duration-300 ease-in-out">
-            {invoice.parts.map((p, i) => (
-              <span
-                key={i}
-                className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm cursor-pointer select-none"
-                onClick={() =>
-                  setInvoice({
-                    ...invoice,
-                    parts: invoice.parts.filter((_, idx) => idx !== i),
-                  })
-                }
-              >
-                {p} ✕
-              </span>
-            ))}
-
-            <input
-              className="flex-grow px-2 py-1 outline-none"
-              placeholder="write name here and press Enter"
-              value={invoice.partsInput}
-              onChange={(e) => setInvoice({ ...invoice, partsInput: e.target.value })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && invoice.partsInput.trim() !== "") {
-                  setInvoice({
-                    ...invoice,
-                    parts: [...invoice.parts, invoice.partsInput.trim()],
-                    partsInput: "",
-                  });
-                }
-              }}
-            />
-          </div>
-        </div>
-
-        {/* MACHINE SERIAL */}
+          <input
+            type="text"
+            placeholder="Type machine model..."
+            value={invoice.machineModel}
+            onChange={(e) =>
+              setInvoice({ ...invoice, machineModel: e.target.value })
+            }
+            className="w-full px-3 py-3 border border-gray-300 rounded focus:border-green-600 focus:ring-1 focus:ring-green-500"
+          />
+        </div> */}
         <div className="flex-1">
           <label className="block text-gray-700 font-semibold mb-1">Machine Serial No</label>
           <input
@@ -119,6 +105,12 @@ const MachineSection = ({ invoice, setInvoice, categories }) => {
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
           />
         </div>
+      </div>
+
+      {/* ===== GROUP 2: PARTS + SERIAL ===== */}
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
+        {/* MACHINE SERIAL */}
+
       </div>
     </div>
   );
