@@ -9,12 +9,11 @@ export const generateInvoicePDF = (invoice) => {
     let container = null;
 
     try {
-      // 🔹 NEW CODE: temporary hidden container for rendering
       container = document.createElement("div");
       container.style.position = "absolute";
       container.style.left = "-9999px";
       container.style.top = "0";
-      container.style.width = "794px"; // A4 width at 96 DPI
+      container.style.width = "794px"; 
       document.body.appendChild(container);
 
       root = createRoot(container);

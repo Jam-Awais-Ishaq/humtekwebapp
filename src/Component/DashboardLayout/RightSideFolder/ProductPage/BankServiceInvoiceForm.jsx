@@ -74,21 +74,22 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
       setInvoices(
         invoices.map((inv) => (inv.id === editInvoice.id ? newInvoice : inv))
       );
-      showStatusModal({
-        type: "success",
-        title: "Invoice Updated",
-        message: "Invoice successfully update ho gaya",
-      });
     } else {
       setInvoices([...invoices, newInvoice]);
-      showStatusModal({
-        type: "success",
-        title: "Invoice Created",
-        message: "Invoice successfully create ho gaya",
-      });
+      if (typeof showStatusModal === "function") {
+        showStatusModal({
+          type: "success",
+          title: editInvoice ? "Invoice Updated" : "Invoice Created",
+          message: editInvoice
+            ? "Invoice successfully update ho gaya"
+            : "Invoice successfully create ho gaya",
+        });
+      };
     }
 
-    onClose();
+    if (typeof onClose === "function") {
+      onClose();
+    }
   };
 
   return (

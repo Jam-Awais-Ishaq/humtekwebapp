@@ -9,17 +9,18 @@ const InvoiceView = ({ invoice, onClose }) => {
     if (!invoice) return null;
     const { showStatusModal } = useContext(Context);
 
-    const handleGenericAlert = () => {
+    const handleGenericAlert = async () => {
+        await generateInvoicePDF(invoice);
 
-        generateInvoicePDF(invoice)
-
-        showStatusModal({
-            type: "info",
-            title: "Download Complete",
-            message: "PDF downloaded SuccessFully.",
-            primaryButtonText: "OK",
-        })
-    }
+        if (typeof showStatusModal === "function") {
+            showStatusModal({
+                type: "info",
+                title: "Download Complete",
+                message: "PDF downloaded Successfully.",
+                primaryButtonText: "OK",
+            });
+        }
+    };
     return (
         <div className="w-full max-w-3xl bg-white p-6  animate-fadeIn">
 
