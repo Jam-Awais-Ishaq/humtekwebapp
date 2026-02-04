@@ -37,7 +37,6 @@ const InvoiceView = ({ invoice, onClose }) => {
                 <Info label="Bank Name" value={invoice.bankName} />
                 <Info label="Branch Code" value={invoice.branchCode} />
                 <Info label="Category" value={invoice.category} />
-                {/* <Info label="Machine Model" value={invoice.product} /> */}
                 <Info label="Machine Serial" value={invoice.machineSerial} />
                 <Info label="Invoice Date" value={invoice.invoiceDate || "-"} />
                 <Info label="Service Charges Amount" value={`Rs. ${invoice.amount?.toLocaleString() || 0}`} />

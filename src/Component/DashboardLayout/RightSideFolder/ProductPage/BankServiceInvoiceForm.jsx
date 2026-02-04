@@ -54,15 +54,24 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
 
   const finalTotal = serviceTotal + partsTotal;
 
+  const generateInvoiceNumber = () => {
+    const last = Number(localStorage.getItem("lastInvoiceNo")) || 0;
+    const next = last + 1;
+    localStorage.setItem("lastInvoiceNo", next);
+    return `HS${String(next).padStart(3, "0")}`;
+  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log("FINAL INVOICE DATA 👉", invoice);
 
     const newInvoice = {
       ...invoice,
       id: editInvoice ? editInvoice.id : Date.now(),
       totalAmount: finalTotal,
+      invoiceNumber: editInvoice
+        ? editInvoice.invoiceNumber
+        : generateInvoiceNumber(),
       product: invoice.machineModel,
       branchCode: invoice.branchCode,
       qty: invoice.qty,

@@ -71,12 +71,12 @@ const InvoicesPage = () => {
                   <th className="px-4 py-3 font-semibold text-gray-700">
                     Machine Serial No
                   </th>
-                  <th className="px-2 py-3 font-semibold text-gray-700">
+                  {/* <th className="px-2 py-3 font-semibold text-gray-700">
                     Model Name
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">
+                  </th> */}
+                  {/* <th className="px-4 py-3 font-semibold text-gray-700">
                     Service
-                  </th>
+                  </th> */}
                   <th className="px-4 py-3 font-semibold text-gray-700">
                     Amount
                   </th>
@@ -100,15 +100,15 @@ const InvoicesPage = () => {
                       <td className="px-4 py-3 text-gray-600">
                         {inv.machineSerial}
                       </td>
-                      <td className="px-4 py-3">{inv.product}</td>
+                      {/* <td className="px-4 py-3 text-red">{inv.product}</td> */}
 
                       {/* SERVICE BADGE */}
-                      <td className="px-4 py-3">
+                      {/* <td className="px-4 py-3">
                         <span className="px-3 py-1 rounded-full text-xs font-semibold
                       bg-blue-100 text-blue-700">
                           {inv.serviceType}
                         </span>
-                      </td>
+                      </td> */}
 
                       {/* AMOUNT */}
                       <td className="px-4 py-3 font-semibold text-green-600">

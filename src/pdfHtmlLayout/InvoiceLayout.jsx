@@ -1,6 +1,5 @@
 import React from "react";
-import logo from '../assets/GearLogo.jpeg';
-
+import logo from '../assets/GearLogo.png';
 const InvoiceLayout = ({ invoice }) => {
     const partItems = invoice?.parts?.length
         ? invoice.parts.map((part) => ({
@@ -34,7 +33,7 @@ const InvoiceLayout = ({ invoice }) => {
     const items = serviceItem
         ? [...partItems, serviceItem]
         : partItems;
-        
+
     invoice = { ...invoice, items };
 
     return (
@@ -82,7 +81,7 @@ const InvoiceLayout = ({ invoice }) => {
                 <div className="w-[50%] pl-30 pt-4  space-y-4">
                     <div className="flex items-center ">
                         <p className=" underline text-[#172554] font-bold text-sm">Invoice NO </p>
-                        <span className="ml-6 text-[#0891b2]">HS-00{invoice?.id}</span>
+                        <span className="ml-6 text-[#0891b2]">{invoice?.invoiceNumber}</span>
                     </div>
                     <div>
                         {/* <div className="flex items-center ">
