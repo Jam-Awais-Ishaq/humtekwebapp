@@ -67,22 +67,11 @@ const InvoicesPage = () => {
               <thead className="bg-gray-100 sticky top-0 z-10">
                 <tr>
                   <th className="px-4 py-3 font-semibold text-gray-700">Bank</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">Branch Code</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">
-                    Machine Serial No
-                  </th>
-                  {/* <th className="px-2 py-3 font-semibold text-gray-700">
-                    Model Name
-                  </th> */}
-                  {/* <th className="px-4 py-3 font-semibold text-gray-700">
-                    Service
-                  </th> */}
-                  <th className="px-4 py-3 font-semibold text-gray-700">
-                    Amount
-                  </th>
-                  <th className="px-4 py-3 font-semibold text-gray-700 text-center">
-                    Actions
-                  </th>
+                  <th className="px-4 py-3 font-semibold text-gray-700">Branch Code / Address</th>
+                  <th className="px-4 py-3 font-semibold text-gray-700">Machine Serial No</th>
+                  <th className="px-2 py-3 font-semibold text-gray-700">Model Name</th>
+                  <th className="px-4 py-3 font-semibold text-gray-700">Amount</th>
+                  <th className="px-4 py-3 font-semibold text-gray-700 text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -100,15 +89,7 @@ const InvoicesPage = () => {
                       <td className="px-4 py-3 text-gray-600">
                         {inv.machineSerial}
                       </td>
-                      {/* <td className="px-4 py-3 text-red">{inv.product}</td> */}
-
-                      {/* SERVICE BADGE */}
-                      {/* <td className="px-4 py-3">
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold
-                      bg-blue-100 text-blue-700">
-                          {inv.serviceType}
-                        </span>
-                      </td> */}
+                      <td className="px-4 py-3 text-red">{inv.productModel}</td>
 
                       {/* AMOUNT */}
                       <td className="px-4 py-3 font-semibold text-green-600">
@@ -118,10 +99,7 @@ const InvoicesPage = () => {
                       {/* ACTIONS */}
                       <td className="px-4 py-3">
                         <div className="flex justify-center gap-3">
-                          <button
-                            onClick={() => handleView(inv)}
-                            className="p-2 rounded-full hover:bg-blue-100 text-blue-600 cursor-pointer transition"
-                          >
+                          <button onClick={() => handleView(inv)} className="p-2 rounded-full hover:bg-blue-100 text-blue-600 cursor-pointer transition">
                             <FaEye />
                           </button>
                           <button

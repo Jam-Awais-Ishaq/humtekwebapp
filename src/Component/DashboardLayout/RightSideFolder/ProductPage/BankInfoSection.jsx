@@ -18,7 +18,7 @@ const BankInfoSection = ({ invoice, handleChange }) => {
       </div>
 
       <div>
-        <label className="block text-gray-700 font-semibold mb-1">Branch Code</label>
+        <label className="block text-gray-700 font-semibold mb-1">Branch Code / Address</label>
         <input
           type="text"
           name="branchCode"

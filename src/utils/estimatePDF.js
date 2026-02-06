@@ -34,11 +34,11 @@ export const generateEstimatePDF = (estimate, preview = false) => {
 
   // ---- Logo add (top-left) ----
   // x=10, y=18, width=20, height=20
-  doc.addImage(logo, "PNG", 10, 18, 20, 20);
+  doc.addImage(logo, "PNG", 22, 18, 20, 20);
 
   // ---- Company Name Font ----
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(40);
+  doc.setFont("arial rounded mt bold", "");
+  doc.setFontSize(36);
   doc.setTextColor(30, 30, 30);
 
   // ---- Company Name Text ----

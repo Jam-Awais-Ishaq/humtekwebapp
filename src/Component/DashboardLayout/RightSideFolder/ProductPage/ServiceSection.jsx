@@ -20,6 +20,7 @@ const ServiceSection = ({ invoice, setInvoice, handleChange, isEditMode }) => {
 
     // 🔸 total calculation
     const qty = Number(updated[index].qty || 0);
+    const hsCode = updated[index].hsCode || "-";
     const price = Number(updated[index].unitPrice || 0);
     const tax = Number(updated[index].tax || 0);
 
@@ -86,9 +87,10 @@ const ServiceSection = ({ invoice, setInvoice, handleChange, isEditMode }) => {
       </div>
 
       {/* === PART penal == */}
-      <div className="grid grid-cols-6 gap-3 font-semibold text-gray-700 bg-gray-300 p-3 rounded-t-lg">
+      <div className="grid grid-cols-7 gap-3 font-semibold text-gray-700 bg-gray-300 p-3 rounded-t-lg">
         <span>Part Name</span>
         <span>QTY</span>
+        <span>HS Code</span>
         <span>Unit Price</span>
         <span>Tax %</span>
         <span>Total</span>
@@ -96,11 +98,8 @@ const ServiceSection = ({ invoice, setInvoice, handleChange, isEditMode }) => {
       </div>
 
       {parts.map((part, index) => (
-        <div
-          key={index}
-          className="border border-gray-200 rounded-lg p-3 bg-gray-50"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+        <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-2 items-center">
             <input
               type="text"
               placeholder="Part Name"
@@ -108,11 +107,19 @@ const ServiceSection = ({ invoice, setInvoice, handleChange, isEditMode }) => {
               onChange={(e) => updatePart(index, "name", e.target.value)}
               className="px-3 py-2 border rounded"
             />
+
             <input
               type="number"
               placeholder="QTY"
               value={part.qty}
               onChange={(e) => updatePart(index, "qty", e.target.value)}
+              className="px-3 py-2 border rounded"
+            />
+            <input
+              type="number"
+              placeholder="HS Code"
+              value={part.hsCode}
+              onChange={(e) => updatePart(index, "hsCode", e.target.value)}
               className="px-3 py-2 border rounded"
             />
             <input

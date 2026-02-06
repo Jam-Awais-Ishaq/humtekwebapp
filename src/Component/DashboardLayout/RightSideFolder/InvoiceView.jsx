@@ -37,6 +37,7 @@ const InvoiceView = ({ invoice, onClose }) => {
                 <Info label="Bank Name" value={invoice.bankName} />
                 <Info label="Branch Code" value={invoice.branchCode} />
                 <Info label="Category" value={invoice.category} />
+                <Info label="Product Model" value={invoice.productModel} />
                 <Info label="Machine Serial" value={invoice.machineSerial} />
                 <Info label="Invoice Date" value={invoice.invoiceDate || "-"} />
                 <Info label="Service Charges Amount" value={`Rs. ${invoice.amount?.toLocaleString() || 0}`} />
@@ -54,6 +55,7 @@ const InvoiceView = ({ invoice, onClose }) => {
                             <tr>
                                 <th className="border p-2">Name</th>
                                 <th className="border p-2">Qty</th>
+                                <th className="border p-2">HS Code</th>
                                 <th className="border p-2">Unit Price</th>
                                 <th className="border p-2">Tax %</th>
                                 <th className="border p-2">Total per Unit</th>
@@ -65,11 +67,10 @@ const InvoiceView = ({ invoice, onClose }) => {
                                 <tr key={index} className="text-center">
                                     <td className="border p-2">{part.name}</td>
                                     <td className="border p-2">{part.qty}</td>
+                                    <td className="border p-2">{part.hsCode || "-"}</td>
                                     <td className="border p-2">Rs. {part.unitPrice}</td>
                                     <td className="border p-2">{part.tax}%</td>
-                                    <td className="border p-2 font-semibold">
-                                        Rs. {part.total}
-                                    </td>
+                                    <td className="border p-2 font-semibold">Rs. {part.total}</td>
                                 </tr>
                             ))}
                         </tbody>

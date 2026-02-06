@@ -5,16 +5,13 @@ import InvoicePreview from './utils/InvoicePreview';
 function App() {
 
   // const [invoice] = useState({
-  //   id: 1,
+  //   invoiceNumber: "HS00123",
   //   bankName: "Dubai islami bank",
   //   branch: "Main Branch",
-  //   branchCode: "BR-101",
+  //   branchCode: "Gulshan-e-Iqbal Branch",
   //   product: "Printer PX-1000",
-  //   serviceType: "Repair",
-  //   serviceDate: "2026-01-20",
   //   invoiceDate: "2026-01-22",
-  //   dueDate: "2026-02-05",
-  //   status: "Pending",
+  //   category:"bundle binding",
   //   items: [
   //     {
   //       serviceDescription: "Parts replacement",

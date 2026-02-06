@@ -80,7 +80,7 @@ const MachineSection = ({ invoice, setInvoice, categories }) => {
         </div>
 
         {/* ===== MACHINE MODEL (TEXT INPUT) ===== */}
-        {/* <div className="flex-1">
+        <div className="flex-1">
           <label className="font-semibold block mb-1">Machine Model</label>
           <input
             type="text"
@@ -91,7 +91,13 @@ const MachineSection = ({ invoice, setInvoice, categories }) => {
             }
             className="w-full px-3 py-3 border border-gray-300 rounded focus:border-green-600 focus:ring-1 focus:ring-green-500"
           />
-        </div> */}
+        </div>
+
+      </div>
+
+      {/* ===== GROUP 2: PARTS + SERIAL ===== */}
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
+        {/* MACHINE SERIAL */}
         <div className="flex-1">
           <label className="block text-gray-700 font-semibold mb-1">Machine Serial No</label>
           <input
@@ -105,12 +111,6 @@ const MachineSection = ({ invoice, setInvoice, categories }) => {
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
           />
         </div>
-      </div>
-
-      {/* ===== GROUP 2: PARTS + SERIAL ===== */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
-        {/* MACHINE SERIAL */}
-
       </div>
     </div>
   );
