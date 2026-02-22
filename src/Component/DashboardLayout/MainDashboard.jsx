@@ -13,6 +13,7 @@ import { useContext } from "react";
 import { Context } from "../../Context/ContextProvider";
 import ChatSidePanel from "./ChatSystem/ChatSidePanel";
 import EstimatePage from "./RightSideFolder/EstimatePage/EstimatePage";
+import AddMachineForm from "./RightSideFolder/ProductPage/AddMachineForm";
 const MainDashboard = () => {
 
     const { openChat, setChatOpen } = useContext(Context);
@@ -30,6 +31,7 @@ const MainDashboard = () => {
                     <Route path="estimates" element={<EstimatePage />} />
                     <Route path="sendEmails" element={<SendEmail />} />
                     <Route path="checkEmails" element={<CheckEmail />} />
+                    <Route path="addMachine" element={<AddMachineForm />} />
                 </Route>
             </Routes>
             <ChatSidePanel isOpen={openChat} onClose={() => setChatOpen(false)} />

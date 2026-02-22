@@ -1,77 +1,142 @@
-import { useEffect, useRef, useState } from "react";
-const MachineSection = ({ invoice, setInvoice, categories }) => {
-  const [search, setSearch] = useState("");
-  const [filteredCategories, setFilteredCategories] = useState(categories);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
+import { useState, useRef, useEffect, useMemo } from "react";
 
-  // Filter categories based on input
+const MachineSection = ({ invoice, setInvoice, machines }) => {
+  const [searchCategory, setSearchCategory] = useState("");
+  const [searchModel, setSearchModel] = useState("");
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showModelDropdown, setShowModelDropdown] = useState(false);
+  const categoryRef = useRef(null);
+  const modelRef = useRef(null);
+
+  // Debug: Check machines data
   useEffect(() => {
-    if (!search) {
-      setFilteredCategories(categories);
-      return;
-    }
-    const filtered = categories.filter((cat) =>
-      cat.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredCategories(filtered);
-  }, [search, categories]);
+    console.log("🔄 MachineSection received machines:", JSON.stringify(machines, null, 2));
+  }, [machines]);
 
-  // Close dropdown if clicked outside
+  // ===== derive categories dynamically =====
+  const categories = useMemo(() => {
+    if (!machines || machines.length === 0) {
+      console.log("No machines available");
+      return [];
+    }
+    const cats = machines.map(m => m.category);
+    console.log("📋 All categories:", cats);
+    return cats;
+  }, [machines]);
+
+  // ===== 🔥 FIXED: Get models for selected category =====
+  const getModelsForCategory = () => {
+    if (!invoice.category || !machines || machines.length === 0) {
+      return [];
+    }
+
+    // Find the category object (case insensitive)
+    const selectedCategory = machines.find(
+      m => m.category.toLowerCase().trim() === invoice.category.toLowerCase().trim()
+    );
+
+    console.log("🔍 Selected category object:", selectedCategory);
+
+    if (!selectedCategory) {
+      console.log("❌ Category not found:", invoice.category);
+      return [];
+    }
+
+    console.log("✅ Models found:", selectedCategory.models);
+    return selectedCategory.models || [];
+  };
+
+  // ===== filtered models with search =====
+  const filteredModels = useMemo(() => {
+    const allModels = getModelsForCategory();
+    console.log("🎯 All models for category:", allModels);
+
+    if (!searchModel) {
+      return allModels;
+    }
+
+    return allModels.filter(mod =>
+      mod.toLowerCase().includes(searchModel.toLowerCase())
+    );
+  }, [machines, invoice.category, searchModel]);
+
+  // ===== Close dropdowns if clicked outside =====
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setShowDropdown(false);
+      if (categoryRef.current && !categoryRef.current.contains(e.target)) {
+        setShowCategoryDropdown(false);
+      }
+      if (modelRef.current && !modelRef.current.contains(e.target)) {
+        setShowModelDropdown(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 1️⃣ Sync search input with invoice.category (for edit mode)
+  // ===== Sync category and model input on edit =====
   useEffect(() => {
-    setSearch(invoice.category || "");
+    setSearchCategory(invoice.category || "");
   }, [invoice.category]);
 
-  // 2️⃣ Select category function
+  useEffect(() => {
+    setSearchModel(invoice.machineModel || "");
+  }, [invoice.machineModel]);
+
+  // ===== Select category =====
   const selectCategory = (cat) => {
+    console.log("📌 Selected category:", cat);
     setInvoice({
       ...invoice,
       category: cat,
-      // reset machineModel ONLY if it was empty before
-      machineModel: invoice.machineModel ? invoice.machineModel : "",
+      machineModel: "", // reset model when category changes
     });
+    setSearchCategory(cat);
+    setShowCategoryDropdown(false);
+    setSearchModel(""); // reset search model
+  };
 
-    setSearch(cat);
-    setShowDropdown(false);
+  // ===== Select model =====
+  const selectModel = (mod) => {
+    console.log("📌 Selected model:", mod);
+    setInvoice({
+      ...invoice,
+      machineModel: mod,
+    });
+    setSearchModel(mod);
+    setShowModelDropdown(false);
   };
 
   return (
     <div className="flex flex-col gap-6">
-      {/* ===== GROUP 1: CATEGORY + MACHINE ===== */}
+      {/* ===== GROUP 1: CATEGORY + MODEL ===== */}
       <div className="flex gap-6">
-        {/* ===== CATEGORY ===== */}
-        <div className="relative flex-1" ref={dropdownRef}>
+        {/* CATEGORY */}
+        <div className="relative flex-1" ref={categoryRef}>
           <label className="font-semibold block mb-1">Category</label>
           <input
             type="text"
             placeholder="Search category..."
-            value={search}
+            value={searchCategory}
             onChange={(e) => {
-              setSearch(e.target.value);
-              setShowDropdown(true);
+              setSearchCategory(e.target.value);
+              setShowCategoryDropdown(true);
             }}
-            onFocus={() => setShowDropdown(true)}
+            onFocus={() => setShowCategoryDropdown(true)}
             className="w-full px-3 py-3.5 border border-gray-300 rounded focus:border-green-600 focus:ring-1 focus:ring-green-500"
           />
 
-          {showDropdown && filteredCategories.length > 0 && (
+          {showCategoryDropdown && (
             <div className="absolute top-full left-0 right-0 bg-white border rounded mt-1 shadow max-h-48 overflow-y-auto z-50">
-              {filteredCategories.map((cat) => (
+              {categories.length === 0 && (
+                <div className="px-4 py-2 text-gray-500 italic">No category added</div>
+              )}
+              {categories.map((cat) => (
                 <div
                   key={cat}
                   className="px-4 py-2 cursor-pointer hover:bg-green-300"
-                  onClick={() => selectCategory(cat)}>
+                  onClick={() => selectCategory(cat)}
+                >
                   {cat}
                 </div>
               ))}
@@ -79,34 +144,55 @@ const MachineSection = ({ invoice, setInvoice, categories }) => {
           )}
         </div>
 
-        {/* ===== MACHINE MODEL (TEXT INPUT) ===== */}
-        <div className="flex-1">
+        {/* MODEL */}
+        <div className="relative flex-1" ref={modelRef}>
           <label className="font-semibold block mb-1">Machine Model</label>
           <input
             type="text"
-            placeholder="Type machine model..."
-            value={invoice.machineModel}
-            onChange={(e) =>
-              setInvoice({ ...invoice, machineModel: e.target.value })
-            }
+            placeholder="Type or search model..."
+            value={searchModel}
+            onChange={(e) => {
+              setSearchModel(e.target.value);
+              setShowModelDropdown(true);
+            }}
+            onFocus={() => setShowModelDropdown(true)}
             className="w-full px-3 py-3 border border-gray-300 rounded focus:border-green-600 focus:ring-1 focus:ring-green-500"
           />
-        </div>
 
+          {showModelDropdown && (
+            <div className="absolute top-full left-0 right-0 bg-white border rounded mt-1 shadow max-h-48 overflow-y-auto z-50">
+              {filteredModels.length === 0 && (
+                <div className="px-4 py-2 text-gray-500 italic">
+                  {invoice.category
+                    ? "No model added for this category"
+                    : "Select a category first"}
+                </div>
+              )}
+              {filteredModels.map((mod) => (
+                <div
+                  key={mod}
+                  className="px-4 py-2 cursor-pointer hover:bg-green-300"
+                  onClick={() => selectModel(mod)}
+                >
+                  {mod}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* ===== GROUP 2: PARTS + SERIAL ===== */}
+      {/* ===== GROUP 2: SERIAL ===== */}
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
-        {/* MACHINE SERIAL */}
         <div className="flex-1">
           <label className="block text-gray-700 font-semibold mb-1">Machine Serial No</label>
           <input
-            type="text"
-            name="machineSerial"
+            type="number"
+            name="discount"
             placeholder="ATM-45872"
-            value={invoice.machineSerial}
+            value={invoice.discount}
             onChange={(e) =>
-              setInvoice({ ...invoice, machineSerial: e.target.value })
+              setInvoice({ ...invoice, discount: e.target.value })
             }
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
           />
@@ -115,5 +201,4 @@ const MachineSection = ({ invoice, setInvoice, categories }) => {
     </div>
   );
 };
-
 export default MachineSection;

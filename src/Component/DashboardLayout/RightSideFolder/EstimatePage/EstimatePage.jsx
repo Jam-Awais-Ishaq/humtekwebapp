@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import EstimateCustomerInfo from "./EstimateCustomerInfo";
 import EstimateMachineInfo from "./EstimateMachineInfo";
 import PartsTable from "./PartsTable";
@@ -29,9 +29,9 @@ export default function EstimatePage() {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const { openModal, setOpenModal } = useContext(Context)
+  const { openModal, setOpenModal, machines } = useContext(Context)
 
-
+  const memoizedMachines = useMemo(() => machines, [machines]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -164,7 +164,7 @@ export default function EstimatePage() {
 
         <div className="space-y-8">
           <EstimateCustomerInfo form={form} handleChange={handleChange} />
-          <EstimateMachineInfo form={form} handleChange={handleChange} allMachineNames={["Counting Machine", "Shrink Wraping Machine", "Bundle Binding Machine", "Hitachi"]} handlePartsChange={handlePartsChange} />
+          <EstimateMachineInfo machines={memoizedMachines} form={form} handleChange={handleChange} handlePartsChange={handlePartsChange} />
           <PartsTable items={form.items} handleAddItem={handleAddItem} handleItemChange={handleItemChange} />
         </div>
 
@@ -256,7 +256,7 @@ export default function EstimatePage() {
         {isEditing ? (
           <>
             <EstimateCustomerInfo form={form} handleChange={handleChange} />
-            <EstimateMachineInfo handleChange={handleChange} allMachineNames={["Counting Machine", "Shrink Wraping Machine", "Bundle Binding Machine", "Hitachi"]} form={form} handlePartsChange={handlePartsChange} />
+            <EstimateMachineInfo  machines={memoizedMachines}  handleChange={handleChange} allMachineNames={["Counting Machine", "Shrink Wraping Machine", "Bundle Binding Machine", "Hitachi"]} form={form} handlePartsChange={handlePartsChange} />
             <PartsTable items={form.items} handleAddItem={handleAddItem} handleItemChange={handleItemChange} />
 
             <button

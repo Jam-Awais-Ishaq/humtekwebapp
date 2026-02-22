@@ -4,7 +4,7 @@ import BankInfoSection from "./BankInfoSection";
 import MachineSection from "./MachineSection";
 import ServiceSection from "./ServiceSection";
 const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
-  const { invoices, setInvoices, showStatusModal } = useContext(Context);
+  const { invoices, setInvoices, showStatusModal, machines,setMachines } = useContext(Context);
   const isEditMode = Boolean(editInvoice);
   // === SINGLE STATE ===
   const [invoice, setInvoice] = useState(
@@ -23,7 +23,6 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
       parts: [],
     }
   );
-  const categories = ["Counting Machine", "Bundle Binding Machines", "Shrink Wraping Machines", "Stuffing Machines",];
   const handleChange = (e) => { setInvoice({ ...invoice, [e.target.name]: e.target.value }); };
   const totalAmount = Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
   const partsTotal = invoice.parts.reduce((sum, p) => sum + Number(p.total || 0), 0);
@@ -49,6 +48,7 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
       qty: invoice.qty,
       category: invoice.category,
       parts: invoice.parts,
+      discount: invoice.discount || 0,
     };
     if (editInvoice) {
       setInvoices(
@@ -69,11 +69,12 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   return (
     <div className="max-w-5xl mx-auto bg-white p-4">
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Banking Machine Service Invoice</h2>
+
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* BANK INFO */}
         <BankInfoSection invoice={invoice} handleChange={handleChange} />
         {/* MACHINE INFO */}
-        <MachineSection invoice={invoice} setInvoice={setInvoice} categories={categories}/>
+        <MachineSection invoice={invoice} setInvoice={setInvoice} machines={machines}/>
         {/* SERVICE INFO */}
         <ServiceSection invoice={invoice} setInvoice={setInvoice} handleChange={handleChange} totalAmount={totalAmount} isEditMode={isEditMode} />
       </form>

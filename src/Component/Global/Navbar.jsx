@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import imageLogo from "@/assets/Logo.jpeg"
 import { Context } from "../../Context/ContextProvider";
-import { AdminPanelSettings, AttachEmailTwoTone, Email, EmailTwoTone } from "@mui/icons-material";
+import { AdminPanelSettings, AttachEmailTwoTone, Email, EmailTwoTone, ProductionQuantityLimits } from "@mui/icons-material";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 const Navbar = () => {
   const [createOpen, setCreateOpen] = useState(false);
@@ -113,6 +113,12 @@ const Navbar = () => {
               className="flex items-center gap-2 px-4 py-3 hover:bg-purple-50 hover:text-purple-700 transition-colors duration-200"
             >
               <AttachEmailTwoTone size={18} className="text-purple-600" /> Send email
+            </Link>
+            <Link
+              to="/dashboard/addMachine"
+              className="flex items-center gap-2 px-4 py-3 hover:bg-purple-50 hover:text-green-600 transition-colors duration-200"
+            >
+              <ProductionQuantityLimits size={18} className="text-green-600" /> Add Product
             </Link>
 
             <Link

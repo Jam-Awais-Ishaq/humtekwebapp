@@ -10,54 +10,23 @@ export const ContextProvider = ({ children }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [openChat, setChatOpen] = useState(false);
 
+    const [machines, setMachines] = useState([]);
+
     // User Profile Data 
-    const [userProfile, setUserProfile] = useState({
-        name: "",
-        email: "",
-        companyName: "",
-    });
+    const [userProfile, setUserProfile] = useState({ name: "", email: "", companyName: "", });
 
     // Generic alert modal state
-    const [statusModal, setStatusModal] = useState({
-        open: false,
-        type: "success",
-        title: "",
-        message: "",
-        primaryButtonText: "OK",
-        onPrimaryAction: null,
-    });
+    const [statusModal, setStatusModal] = useState({ open: false, type: "success", title: "", message: "", primaryButtonText: "OK", onPrimaryAction: null, });
 
     // 🔹Generic alert GLOBAL FUNCTION (IMPORTANT)
-    const showStatusModal = (config) => {
-        setStatusModal({
-            open: true,
-            ...config,
-        });
-    };
+    const showStatusModal = (config) => { setStatusModal({ open: true, ...config, }); };
 
     // Generic alert modal close function
-    const closeStatusModal = () => {
-        setStatusModal((prev) => ({ ...prev, open: false }));
-    };
+    const closeStatusModal = () => { setStatusModal((prev) => ({ ...prev, open: false })); };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen }}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen, machines, setMachines }}>
             {children}
-
-
-            {/* GLOBAL MODAL RENDER */}
-
-            <GenericStatusModal
-                open={statusModal.open}
-                type={statusModal.type}
-                title={statusModal.title}
-                message={statusModal.message}
-                primaryButtonText={statusModal.primaryButtonText}
-                onPrimaryAction={() => {
-                    statusModal.onPrimaryAction?.();
-                    closeStatusModal();
-                }}
-                onClose={closeStatusModal}
-            />
+            <GenericStatusModal open={statusModal.open} type={statusModal.type} title={statusModal.title} message={statusModal.message} primaryButtonText={statusModal.primaryButtonText} onPrimaryAction={() => { statusModal.onPrimaryAction?.(); closeStatusModal(); }} onClose={closeStatusModal} />
         </Context.Provider>
     )
 }

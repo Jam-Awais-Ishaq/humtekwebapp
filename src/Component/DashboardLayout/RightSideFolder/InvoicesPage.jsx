@@ -4,6 +4,7 @@ import Modal from "../../common/Modal";
 import InvoiceView from "./InvoiceView";
 import { Context } from "../../../Context/ContextProvider";
 import BankServiceInvoiceForm from "./ProductPage/BankServiceInvoiceForm";
+import { LinkIcon } from "lucide-react";
 
 const InvoicesPage = () => {
 
@@ -60,18 +61,19 @@ const InvoicesPage = () => {
         </div>
 
         {/* 🔹 TABLE CARD */}
-        <div className="bg-white rounded-lg pb-0.5 shadow-lg border border-gray-300 overflow-hidden">
+        <div className="bg-white rounded-lg pb-0.5 shadow-lg border-t-2 border border-gray-400 overflow-hidden">
           {/* TABLE SCROLL */}
           <div className="max-h-105 overflow-y-auto">
             <table className="w-full text-sm text-left">
               <thead className="bg-gray-100 sticky top-0 z-10">
                 <tr>
-                  <th className="px-4 py-3 font-semibold text-gray-700">Bank</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">Branch Code / Address</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">Machine Serial No</th>
-                  <th className="px-2 py-3 font-semibold text-gray-700">Model Name</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700">Amount</th>
-                  <th className="px-4 py-3 font-semibold text-gray-700 text-center">Actions</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Bank</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Branch Code / Address</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Machine Serial No</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Model Name</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Amount</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">FBR Link</th>
+                  <th className="px-2.5  border-b-2 border-gray-400 py-3 font-semibold text-gray-700 text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -96,6 +98,10 @@ const InvoicesPage = () => {
                         Rs. {inv.amount.toLocaleString(inv)}
                       </td>
 
+                      <button type="button" className="border border-blue-500 mt-3 text-blue-500 hover:bg-blue-50 px-3 py-1 rounded-md"> 
+                        <LinkIcon size={16} className="inline mr-1" />
+                        link to fbr
+                      </button>
                       {/* ACTIONS */}
                       <td className="px-4 py-3">
                         <div className="flex justify-center gap-3">
