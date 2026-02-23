@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../../Context/ContextProvider';
+import { loginUser } from '../../api/AuthApi';
 
 const LoginForm = ({ switchToRegister, setOpenModal }) => {
   const [form, setForm] = useState({
@@ -20,32 +21,37 @@ const LoginForm = ({ switchToRegister, setOpenModal }) => {
     });
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!form.email || !form.password) {
-      // alert("Please fill in all fields.");
       showStatusModal({
         show: true,
         message: "Please fill in all fields.",
-        type: "error"
-      })
-      console.log(showState)
+        type: "error",
+      });
       return;
-    } else {
+    }
+
+    try {
+      const res = await loginUser(form);
+      localStorage.setItem("token", res.token);
       showStatusModal({
         show: true,
         message: "Login Successful!",
         type: "success",
         primaryButtonText: "Go to Dashboard",
-        onPrimaryAction: ()=> {
-          navigate('/dashboard')
-        }
-      })
-    }
+        onPrimaryAction: () => navigate("/dashboard"),
+      });
 
-    console.log("Email:", form.email);
-    console.log("Password:", form.password);
-  }
+    } catch (err) {
+      showStatusModal({
+        show: true,
+        message: err.response?.data?.message || "Login failed",
+        type: "error",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-2 h-full">

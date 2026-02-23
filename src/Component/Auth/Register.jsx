@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Context } from "../../Context/ContextProvider";
+import { registerUser } from "../../api/AuthApi";
 
 const Register = ({ switchToLogin }) => {
   const [form, setForm] = useState({
@@ -19,82 +20,87 @@ const Register = ({ switchToLogin }) => {
   };
   const {showStatusModal} = useContext(Context);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // REQUIRED FIELDS VALIDATION
-    if (
-      !form.name.trim() ||
-      !form.email.trim() ||
-      !form.ntn.trim() ||
-      !form.password.trim() ||
-      !form.confirmPassword.trim()
-    ) {
-      showStatusModal({
-        type: "warning",
-        title: "Missing Information",
-        message: "Please fill the data before submitting",
-        primaryButtonText: "OK"
-      });
-      return;
-    }
+  // REQUIRED FIELDS VALIDATION
+  if (
+    !form.name.trim() ||
+    !form.email.trim() ||
+    !form.ntn.trim() ||
+    !form.password.trim() ||
+    !form.confirmPassword.trim()
+  ) {
+    showStatusModal({
+      type: "warning",
+      title: "Missing Information",
+      message: "Please fill the data before submitting",
+      primaryButtonText: "OK"
+    });
+    return;
+  }
 
-    // EMAIL VALIDATION
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(form.email)) {
-      showStatusModal({
-        type: "error",
-        title: "Invalid Email",
-        message: "Please enter a valid email address.",
-        primaryButtonText: "OK"
-      });
-      return;
-    }
+  // EMAIL VALIDATION
+  const emailRegex = /\S+@\S+\.\S+/;
+  if (!emailRegex.test(form.email)) {
+    showStatusModal({
+      type: "error",
+      title: "Invalid Email",
+      message: "Please enter a valid email address.",
+      primaryButtonText: "OK"
+    });
+    return;
+  }
 
-    // NTN VALIDATION
-    const ntnRegex = /^[0-9]{7}-[0-9]$/;
-    if (!ntnRegex.test(form.ntn)) {
-      showStatusModal({
-        type: "error",
-        title: "Invalid NTN",
-        message: "NTN format should be like 1234567-1",
-        primaryButtonText: "OK"
-      });
-      return;
-    }
+  // NTN VALIDATION
+  const ntnRegex = /^[0-9]{7}-[0-9]$/;
+  if (!ntnRegex.test(form.ntn)) {
+    showStatusModal({
+      type: "error",
+      title: "Invalid NTN",
+      message: "NTN format should be like 1234567-1",
+      primaryButtonText: "OK"
+    });
+    return;
+  }
 
-    // PASSWORD LENGTH
-    if (form.password.length < 8) {
-      showStatusModal({
-        type: "error",
-        title: "Weak Password",
-        message: "Password must be at least 8 characters long.",
-        primaryButtonText: "OK"
-      });
-      return;
-    }
+  // PASSWORD LENGTH
+  if (form.password.length < 8) {
+    showStatusModal({
+      type: "error",
+      title: "Weak Password",
+      message: "Password must be at least 8 characters long.",
+      primaryButtonText: "OK"
+    });
+    return;
+  }
 
-    // CONFIRM PASSWORD
-    if (form.password !== form.confirmPassword) {
-      showStatusModal({
-        type: "error",
-        title: "Password Mismatch",
-        message: "Passwords do not match.",
-        primaryButtonText: "OK"
-      });
-      return;
-    }
+  // CONFIRM PASSWORD
+  if (form.password !== form.confirmPassword) {
+    showStatusModal({
+      type: "error",
+      title: "Password Mismatch",
+      message: "Passwords do not match.",
+      primaryButtonText: "OK"
+    });
+    return;
+  }
 
-    // SUCCESS CASE
+  try {
+    // 🔥 PAYLOAD INLINE — NO EXTRA BAKWAS
+    await registerUser({
+      name: form.name,
+      email: form.email,
+      ntn: form.ntn,
+      password: form.password
+    });
+
     showStatusModal({
       type: "success",
       title: "Registration Successful!",
       message: "Your account has been created. Please login to continue.",
       primaryButtonText: "OK",
-      onPrimaryAction: () => {
-        // OPTIONAL - navigate to login screen
-        switchToLogin();
-      }
+      onPrimaryAction: () => switchToLogin()
     });
 
     // RESET FORM
@@ -105,7 +111,18 @@ const Register = ({ switchToLogin }) => {
       password: "",
       confirmPassword: ""
     });
-  };
+
+  } catch (error) {
+    showStatusModal({
+      type: "error",
+      title: "Registration Failed",
+      message:
+        error?.response?.data?.message ||
+        "Something went wrong. Please try again.",
+      primaryButtonText: "OK"
+    });
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center">

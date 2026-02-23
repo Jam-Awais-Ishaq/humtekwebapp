@@ -10,7 +10,7 @@ import {
   FilePlus,
   File,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import imageLogo from "@/assets/Logo.jpeg"
 import { Context } from "../../Context/ContextProvider";
 import { AdminPanelSettings, AttachEmailTwoTone, Email, EmailTwoTone, ProductionQuantityLimits } from "@mui/icons-material";
@@ -19,6 +19,7 @@ const Navbar = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifyOpen, setNotifyOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -36,7 +37,8 @@ const Navbar = () => {
   const notifyRef = useRef(null);
 
 
-  const { userProfile, setUserProfile, openChat, setChatOpen } = useContext(Context);
+
+  const { userProfile, setUserProfile, openChat, setChatOpen, statusModal, setStatusModal } = useContext(Context);
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -54,6 +56,17 @@ const Navbar = () => {
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setStatusModal({
+      show: true,
+      message: "Logged out successfully",
+      type: "success",
+    })
+    navigate("/");
+  }
 
   return (
     <nav className="fixed top-0 left-0 w-full h-14 z-50 bg-white border-b border-gray-200 px-3 sm:px-6 flex items-center justify-between">
@@ -213,7 +226,7 @@ const Navbar = () => {
               >
                 <User className="text-blue-500 group-hover:text-blue-700" size={18} /> My Profile
               </Link>
-              <button  onClick={() => setChatOpen(true)}
+              <button onClick={() => setChatOpen(true)}
                 className="flex items-center gap-3 px-5 py-3 cursor-pointer hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
               >
                 <AdminPanelSettings className="text-green-500 group-hover:text-green-700" size={18} /> Chat with admin
@@ -239,12 +252,9 @@ const Navbar = () => {
             </div>
 
             {/* SIGN OUT */}
-            <Link
-              to="/"
-              className="flex items-center gap-3 px-5 py-3 mt-1 bg-red-500 text-white rounded-b-xl hover:bg-red-600 font-semibold transition-colors duration-200"
-            >
+            <button onClick={handleLogout} className="flex items-center gap-3 px-5 py-3 mt-1 bg-red-500 text-white rounded-b-xl hover:bg-red-600 font-semibold transition-colors duration-200 w-full text-left">
               <LogOut className="text-white" size={18} /> Sign Out
-            </Link>
+            </button>
           </div>
         </div>
       </div>
