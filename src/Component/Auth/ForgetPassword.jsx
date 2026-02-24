@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../Context/ContextProvider";
+import { forgotPassword } from "../../api/AuthApi";
 
 const ForgetPassword = ({ onSuccess }) => {
   const [email, setEmail] = useState("");
@@ -14,16 +15,16 @@ const ForgetPassword = ({ onSuccess }) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const ntnRegex = /^[0-9]{7}-[0-9]{1}$/;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // REQUIRED FIELDS CHECK
+    // REQUIRED FIELDS
     if (!email.trim() || !ntn.trim()) {
       showStatusModal({
         type: "warning",
         title: "Missing Information",
-        message: "Please fill out all required fields before submitting.",
-        primaryButtonText: "OK"
+        message: "Please fill out all required fields.",
+        primaryButtonText: "OK",
       });
       return;
     }
@@ -34,7 +35,7 @@ const ForgetPassword = ({ onSuccess }) => {
         type: "error",
         title: "Invalid Email",
         message: "Please enter a valid email address.",
-        primaryButtonText: "OK"
+        primaryButtonText: "OK",
       });
       return;
     }
@@ -45,28 +46,37 @@ const ForgetPassword = ({ onSuccess }) => {
         type: "error",
         title: "Invalid NTN",
         message: "NTN format must be like 1234567-8.",
-        primaryButtonText: "OK"
+        primaryButtonText: "OK",
       });
       return;
     }
 
-    // SUCCESS — If modal close then call onSuccess
-    showStatusModal({
-      type: "success",
-      title: "Verification Passed!",
-      message: "Email & NTN looks good.",
-      primaryButtonText: "Continue",
-      onPrimaryAction: () => {
-        const data = { email, ntn };
-        // reset form
-        setEmail("");
-        setNtn("");
+    try {
+      // ✅ BACKEND CALL
+      const res = await forgotPassword({ email, ntn });
 
-        if (onSuccess) onSuccess(data);
-      }
-    });
+      showStatusModal({
+        type: "success",
+        title: "Verification Successful",
+        message: res.message || "OTP has been sent to your email.",
+        primaryButtonText: "Continue",
+        onPrimaryAction: () => {
+          setEmail("");
+          setNtn("");
+
+          if (onSuccess) onSuccess({ email });
+        },
+      });
+
+    } catch (err) {
+      showStatusModal({
+        type: "error",
+        title: "Verification Failed",
+        message: err.response?.data?.message || "Something went wrong",
+        primaryButtonText: "OK",
+      });
+    }
   };
-
 
 
   return (

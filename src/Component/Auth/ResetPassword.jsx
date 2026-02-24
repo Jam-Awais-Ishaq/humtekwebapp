@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+// import { resetPassword } from '../../api/AuthApi';
 
+import {resetPassword} from "../../api/AuthApi";
 const ResetPassword = ({ onSuccessModel }) => {
   const [form, setForm] = useState({
     password: "",
@@ -70,7 +72,7 @@ const ResetPassword = ({ onSuccessModel }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.password || !form.confirmPassword) {
@@ -79,10 +81,7 @@ const ResetPassword = ({ onSuccessModel }) => {
     }
 
     if (form.password.length < 8) {
-      setForm((p) => ({
-        ...p,
-        error: "Password must be at least 8 characters",
-      }));
+      setForm((p) => ({ ...p, error: "Password must be at least 8 characters" }));
       return;
     }
 
@@ -93,13 +92,26 @@ const ResetPassword = ({ onSuccessModel }) => {
 
     setForm((p) => ({ ...p, loading: true }));
 
-    setTimeout(() => {
-      setForm((p) => ({ ...p, loading: false }));
+    try {
+      // ✅ call backend API with only newPassword
+      const res = await resetPassword({ newPassword: form.password });
+
+      setForm((p) => ({ ...p, loading: false, password: "", confirmPassword: "", strength: "" }));
+
       setShowSuccessModal(true);
 
+      // ✅ auto close modal + trigger parent callback
       setTimeout(() => setShowSuccessModal(false), 3000);
       setTimeout(() => onSuccessModel(), 4000);
-    }, 1500);
+
+      console.log(res.message); // optional debug
+    } catch (err) {
+      setForm((p) => ({ ...p, loading: false }));
+      setForm((p) => ({
+        ...p,
+        error: err.response?.data?.message || "Server error. Try again.",
+      }));
+    }
   };
 
   return (
