@@ -1,6 +1,7 @@
 import { useContext, useState, useRef } from "react";
 import { Mail, Edit3, MessageCircle } from "lucide-react";
 import { Context } from "../../../../Context/ContextProvider";
+import { sendEmail } from "../../../../api/AuthApi";
 
 const SendEmail = () => {
     const [formData, setFormData] = useState({
@@ -36,18 +37,36 @@ const SendEmail = () => {
         setAttachments((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Sending Email:", formData, attachments);
-        // TODO: API call to send email + attachments
-        showStatusModal({
-            type: "success",
-            title: "Email Sent",
-            message: "Your email has been sent successfully!",
-            primaryButtonText: "OK",
-        });
-        setFormData({ email: "", subject: "", message: "" });
-        setAttachments([]);
+        try {
+            const form = new FormData();
+            form.append('to', formData.email);
+            form.append('subject', formData.subject);
+            form.append('message', formData.message);
+
+            attachments.forEach(file => form.append('attachments', file));
+
+            const res = await sendEmail(form);
+
+            if (res.success) {
+                showStatusModal({
+                    type: 'success',
+                    title: 'Email Sent',
+                    message: 'Your email has been sent successfully!',
+                });
+                setFormData({ email: '', subject: '', message: '' });
+                setAttachments([]);
+            }
+
+        } catch (error) {
+            console.error("Send Email Error:", error);
+            showStatusModal({
+                type: "error",
+                title: "Failed",
+                message: error?.response?.data?.message || "Failed to send email.",
+            });
+        }
     };
 
     const inputClasses =

@@ -7,11 +7,19 @@ import { generateInvoicePDF } from "../../../utils/invoicePDF";
 
 const InvoiceView = ({ invoice, onClose }) => {
     if (!invoice) return null;
-    const { showStatusModal } = useContext(Context);
+    const { showStatusModal, customers } = useContext(Context);
 
     const handleGenericAlert = async () => {
-        await generateInvoicePDF(invoice);
-
+        const customer = customers?.find(
+            (c) => c.bankName === invoice.bankName
+        );
+        const finalInvoice = {
+            ...invoice,
+            headOffice: customer?.headOffice || "-",
+            ntn: customer?.ntn || "-",
+            strn: customer?.strn || "-",
+        };
+        await generateInvoicePDF(finalInvoice);
         if (typeof showStatusModal === "function") {
             showStatusModal({
                 type: "info",
@@ -38,7 +46,7 @@ const InvoiceView = ({ invoice, onClose }) => {
                 <Info label="Branch Code" value={invoice.branchCode} />
                 <Info label="Category" value={invoice.category} />
                 <Info label="Product Model" value={invoice.productModel} />
-                <Info label="Machine Serial" value={invoice.machineSerial} />
+                <Info label="Machine Serial" value={invoice.discount} />
                 <Info label="Invoice Date" value={invoice.invoiceDate || "-"} />
                 <Info label="Service Charges Amount" value={`Rs. ${invoice.amount?.toLocaleString() || 0}`} />
                 <Info label="Total Amount" value={`Rs. ${invoice.totalAmount?.toLocaleString() || 0}`} />

@@ -6,13 +6,13 @@ import ServiceSection from "./ServiceSection";
 const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   const { invoices, setInvoices, showStatusModal, machines,setMachines } = useContext(Context);
   const isEditMode = Boolean(editInvoice);
-  // === SINGLE STATE ===
+
   const [invoice, setInvoice] = useState(
     editInvoice || {
       bankName: "",
       branchCode: "",
       machineModel: "",
-      machineSerial: "",
+      discount: "",
       qty: 0,
       invoiceDate: "",
       amount: "",

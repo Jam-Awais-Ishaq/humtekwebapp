@@ -1,7 +1,7 @@
 import React from "react";
 import { FiMapPin, FiCalendar, FiClock } from "react-icons/fi";
 import { MdOutlineAccountBalance } from "react-icons/md";
-
+import { HiOutlineIdentification } from "react-icons/hi";
 const CustomerBankDetails = ({ data, colorIndex }) => {
   if (!data) return null;
 
@@ -17,7 +17,7 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
 
   return (
     <div className={`${colorScheme.bg} ${colorScheme.border} cursor-pointer border-2 rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 w-full max-w-sm`}>
-      
+
       {/* Bank Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center space-x-3">
@@ -34,7 +34,7 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
             </div>
           </div>
         </div>
-        
+
         {/* Years Badge */}
         <div className={`bg-white ${colorScheme.text} md:w-20 w-auto text-center rounded-xl shadow-sm`}>
           <span className="text-sm font-bold">{data.totalYears}</span>
@@ -61,11 +61,11 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
         <div className="flex items-center justify-between bg-white/70 p-3 rounded-lg">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-red-100 rounded-lg">
-              <FiCalendar className="text-red-600" />
+              <HiOutlineIdentification className="text-red-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">END DATE</p>
-              <p className="font-bold text-gray-800">{data.contractEnd}</p>
+              <p className="text-xs text-gray-500 font-medium"> NTN </p>
+              <p className="font-bold text-gray-800">{data.ntn}</p>
             </div>
           </div>
           <FiClock className="text-red-400" />
@@ -76,17 +76,12 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
       <div className="mt-6 pt-4 border-t border-gray-200">
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500">Contract Status</span>
-          <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-            new Date(data.contractEnd) > new Date() 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
-          }`}>
-            {new Date(data.contractEnd) > new Date() ? 'ACTIVE' : 'EXPIRED'}
+          <span className={`px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800`}>
+            Active
           </span>
         </div>
       </div>
     </div>
   );
 };
-
-export default CustomerBankDetails;
+export default CustomerBankDetails; 

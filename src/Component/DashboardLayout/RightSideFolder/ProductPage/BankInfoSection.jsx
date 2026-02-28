@@ -1,4 +1,9 @@
+import { useContext } from "react";
+import { Context } from "../../../../Context/ContextProvider";
+
 const BankInfoSection = ({ invoice, handleChange }) => {
+
+  const { banks } = useContext(Context);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
@@ -10,10 +15,13 @@ const BankInfoSection = ({ invoice, handleChange }) => {
           required
           className="w-full px-4 py-3 rounded-lg border border-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
         >
-          <option value="">Select Bank</option>
-          <option value="Bank Islami">Bank Islami</option>
-          <option value="Meezan Bank">Meezan Bank</option>
-          <option value="UBL">UBL</option>
+          <option value="">Made Custormer before creating invoice</option>
+
+          {banks.map((bank, index) => (
+            <option key={index} value={bank}>
+              {bank}
+            </option>
+          ))}
         </select>
       </div>
 

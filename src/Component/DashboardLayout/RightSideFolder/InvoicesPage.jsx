@@ -69,7 +69,7 @@ const InvoicesPage = () => {
                 <tr>
                   <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Bank</th>
                   <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Branch Code / Address</th>
-                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Machine Serial No</th>
+                  <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Discount</th>
                   <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Model Name</th>
                   <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">Amount</th>
                   <th className="px-2.5 border-r-2 border-b-2 border-gray-400 py-3 font-semibold text-gray-700">FBR Link</th>
@@ -89,7 +89,7 @@ const InvoicesPage = () => {
                       </td>
                       <td className="px-4 py-3">{inv.branchCode}</td>
                       <td className="px-4 py-3 text-gray-600">
-                        {inv.machineSerial}
+                        {inv.discount}
                       </td>
                       <td className="px-4 py-3 text-red">{inv.productModel}</td>
 

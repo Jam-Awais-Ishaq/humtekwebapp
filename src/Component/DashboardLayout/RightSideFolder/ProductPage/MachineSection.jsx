@@ -185,7 +185,7 @@ const MachineSection = ({ invoice, setInvoice, machines }) => {
       {/* ===== GROUP 2: SERIAL ===== */}
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
         <div className="flex-1">
-          <label className="block text-gray-700 font-semibold mb-1">Machine Serial No</label>
+          <label className="block text-gray-700 font-semibold mb-1">Discount</label>
           <input
             type="number"
             name="discount"

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Context } from "../../../Context/ContextProvider";
 import {
   Building2,
@@ -12,6 +12,7 @@ import {
   BriefcaseBusiness,
   Earth
 } from "lucide-react";
+import { updateCompanyProfile, getCompanyProfile } from "../../../api/AuthApi";
 
 const CompanyProfileSettings = () => {
   const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ const CompanyProfileSettings = () => {
     city: "",
     country: "Pakistan",
     website: "",
+    lastUpdated: null,
   });
 
   const { showStatusModal, setUserProfile } = useContext(Context);
@@ -35,22 +37,80 @@ const CompanyProfileSettings = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setUserProfile({
-      name: formData.ownerName,
-      email: formData.email,
-      companyName: formData.companyName
-    })
-    
-    showStatusModal({
-      type: "success",
-      title: "Profile Updated",
-      message: "Company profile updated successfully!",
-      primaryButtonText: "OK",
-    });
+    try {
+      const payload = {
+        company_name: formData.companyName,
+        owner_name: formData.ownerName,
+
+        company_phone: formData.phone,
+        company_address: formData.address,
+        stn: formData.strn,
+
+        business_type: formData.businessType,
+        city: formData.city,
+        country: formData.country,
+        website: formData.website
+      };
+
+      const res = await updateCompanyProfile(payload);
+
+      // context update (for header / navbar etc.)
+      setUserProfile({
+        name: formData.ownerName,
+        companyName: formData.companyName,
+      });
+
+      showStatusModal({
+        type: "success",
+        title: "Profile Updated",
+        message: res.message || "Company profile updated successfully!",
+        primaryButtonText: "OK",
+      });
+
+    } catch (error) {
+      showStatusModal({
+        type: "error",
+        title: "Update Failed",
+        message:
+          error?.response?.data?.message ||
+          "Something went wrong. Please try again.",
+        primaryButtonText: "OK",
+      });
+    }
   };
+
+  useEffect(() => {
+    console.log("🔥 useEffect mounted");
+    const fetchProfile = async () => {
+      try {
+        const res = await getCompanyProfile();
+
+        if (res.data) {
+          setFormData({
+            companyName: res.data.company_name || "",
+            ownerName: res.data.owner_name || "",
+            phone: res.data.company_phone || "",
+            strn: res.data.stn || "",
+            businessType: res.data.business_type || "",
+            address: res.data.company_address || "",
+            city: res.data.city || "",
+            country: res.data.country || "Pakistan",
+            website: res.data.website || "",
+            email: res.data.email || "",
+            ntn: res.data.ntn || "",
+            lastUpdated: res.data.updated_at || null,
+          });
+        }
+        console.log("TOKEN:", localStorage.getItem("token"));
+      } catch (err) {
+        console.error("Profile load failed");
+      }
+    };
+    fetchProfile();
+  }, []); 
 
   const inputClasses = "w-full rounded-xl border border-slate-300 px-4 py-3 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all duration-200 placeholder:text-slate-400 bg-white";
   const labelClasses = "block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2";
@@ -77,15 +137,13 @@ const CompanyProfileSettings = () => {
             </div>
             <div className="hidden md:block bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200">
               <div className="text-xs text-slate-500">Last Updated</div>
-              <div className="text-sm font-medium text-slate-700">Not yet</div>
+              <div className="text-sm font-medium text-slate-700">{formData.lastUpdated ? new Date(formData.lastUpdated).toLocaleDateString() : "Not yet updated"}</div>
             </div>
           </div>
         </div>
-
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
           <div className="p-6 md:p-6">
             <form onSubmit={handleSubmit} className="space-y-8">
-
               {/* Basic Information Section */}
               <div className={sectionClasses}>
                 <div className="flex items-center gap-2 mb-4">
@@ -150,8 +208,8 @@ const CompanyProfileSettings = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="company@email.com"
-                      className={`${inputClasses} focus:ring-indigo-600 focus:border-indigo-600`}
-                      required
+                      className={`${inputClasses} focus:ring-indigo-600 cursor-not-allowed  focus:border-indigo-600`}
+                      disabled
                     />
                   </div>
 
@@ -208,8 +266,8 @@ const CompanyProfileSettings = () => {
                       value={formData.ntn}
                       onChange={handleChange}
                       placeholder="1234567-8"
-                      className={`${inputClasses} focus:ring-red-500 focus:border-red-500`}
-                      required
+                      className={`${inputClasses} focus:ring-red-500 focus:border-red-500 cursor-not-allowed `}
+                      disabled
                     />
                   </div>
 

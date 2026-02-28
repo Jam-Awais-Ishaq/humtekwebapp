@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import logo from '../assets/GearLogo.png';
+import { Context } from '../Context/ContextProvider';
 const InvoiceLayout = ({ invoice }) => {
     const partItems = invoice?.parts?.length
         ? invoice.parts.map((part) => ({
@@ -52,6 +54,9 @@ const InvoiceLayout = ({ invoice }) => {
     const rows = invoice?.items || [];
     const emptyRows = Math.max(0, MIN_ROWS - rows.length);
 
+
+    
+
     return (
         <div
             className="p-3 w-full max-w-3xl mx-auto h-auto rounded-lg">
@@ -79,12 +84,12 @@ const InvoiceLayout = ({ invoice }) => {
                         <div className="font-[calibri] text-md text-[#172554]">
                             <span className="italic">Invoice to : <br /> {invoice?.bankName || "-"}</span>
                             <p className=" italic">
-                                Adminstration Division Karachi
+                                {invoice?.headOffice || "-"}
                             </p>
                         </div>
 
                         <div>
-                            <h6 className="text-[#172554] font-normal text-sm italic">NTN No : {invoice?.ntnNumber || "109389"}</h6>
+                            <h6 className="text-[#172554] font-normal text-sm italic">NTN No : {invoice?.ntn || "-"}</h6>
                         </div>
                     </div>
                 </div>
@@ -136,7 +141,7 @@ const InvoiceLayout = ({ invoice }) => {
                                 <td className="px-2 pt-12 text-start font-[calibri]  py-5 border-r-2 border-black capitalize">
                                     {item?.parts?.name || "N/A"}
                                 </td>
-                                
+
                                 <td className="px-2 pt-8 font-[calibri] border-r-2 border-black">
                                     {item?.hsCode || "-"}
                                 </td>

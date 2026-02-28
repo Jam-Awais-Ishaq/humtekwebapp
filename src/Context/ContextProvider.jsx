@@ -9,7 +9,8 @@ export const ContextProvider = ({ children }) => {
     const [editInvoice, setEditInvoice] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [openChat, setChatOpen] = useState(false);
-
+    const [banks, setBanks] = useState([]);
+    const [customers, setCustomers] = useState([]);
     const [machines, setMachines] = useState([]);
 
     // User Profile Data 
@@ -24,7 +25,7 @@ export const ContextProvider = ({ children }) => {
     // Generic alert modal close function
     const closeStatusModal = () => { setStatusModal((prev) => ({ ...prev, open: false })); };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen, machines, setMachines }}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen, machines, setMachines , banks, setBanks, customers,setCustomers}}>
             {children}
             <GenericStatusModal open={statusModal.open} type={statusModal.type} title={statusModal.title} message={statusModal.message} primaryButtonText={statusModal.primaryButtonText} onPrimaryAction={() => { statusModal.onPrimaryAction?.(); closeStatusModal(); }} onClose={closeStatusModal} />
         </Context.Provider>

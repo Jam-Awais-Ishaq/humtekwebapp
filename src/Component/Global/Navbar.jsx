@@ -15,11 +15,18 @@ import imageLogo from "@/assets/Logo.jpeg"
 import { Context } from "../../Context/ContextProvider";
 import { AdminPanelSettings, AttachEmailTwoTone, Email, EmailTwoTone, ProductionQuantityLimits } from "@mui/icons-material";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
+import { getCompanyProfile } from "../../api/AuthApi";
 const Navbar = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifyOpen, setNotifyOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [profileData, setProfileData] = useState({
+    name: "",
+    email: "",
+    companyName: ""
+  });
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -67,6 +74,26 @@ const Navbar = () => {
     })
     navigate("/");
   }
+
+  // Profile fetch ke liye naya useEffect
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await getCompanyProfile();
+        if (res.success) {
+          setProfileData({
+            name: res.data.owner_name,
+            email: res.data.email,
+            companyName: res.data.company_name
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 w-full h-14 z-50 bg-white border-b border-gray-200 px-3 sm:px-6 flex items-center justify-between">
@@ -213,9 +240,9 @@ const Navbar = () => {
           >
             {/* PROFILE SUMMARY */}
             <div className="px-5 py-4 border-b border-gray-300 bg-blue-50">
-              <p className="font-semibold text-blue-900 text-lg">{userProfile.name || "Your Name"}</p>
-              <p className="text-sm text-gray-600">{userProfile.email || "email@example.com"}</p>
-              <p className="text-sm text-gray-500 mt-1">{userProfile.companyName || "Company not selected"}</p>
+              <p className="font-semibold text-blue-900 text-lg">{profileData.name || "Your Name"}</p>
+              <p className="text-sm text-gray-600">{profileData.email || "email@example.com"}</p>
+              <p className="text-sm text-gray-500 mt-1">{profileData.companyName || "Company not selected"}</p>
             </div>
 
             {/* ACTION LINKS */}
