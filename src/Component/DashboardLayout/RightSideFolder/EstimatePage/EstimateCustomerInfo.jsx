@@ -1,18 +1,32 @@
+import { useContext } from "react";
+import { Context } from "../../../../Context/ContextProvider";
+
 const EstimateCustomerInfo = ({ form, handleChange }) => {
+  const { banks } = useContext(Context);
   return (
     <div className="bg-white p-6 rounded-xl  space-y-6">
       <h2 className="text-xl font-semibold text-gray-700">Customer Information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <div className="flex flex-col">
-          <label className="text-green-600 font-medium mb-1">Bank Name</label>
-          <input
+          <label className="text-green-600 font-medium mb-1">
+            Bank Name
+          </label>
+
+          <select
             name="bankName"
             value={form.bankName}
             onChange={handleChange}
-            placeholder="Enter bank name"
-            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+            className="border border-gray-300 rounded-md px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">Select Bank</option>
+
+            {banks.map((bank, index) => (
+              <option key={index} value={bank}>
+                {bank}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col">
