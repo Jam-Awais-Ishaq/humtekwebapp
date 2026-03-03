@@ -13,4 +13,6 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+console.log("API module loaded");
 export default api;

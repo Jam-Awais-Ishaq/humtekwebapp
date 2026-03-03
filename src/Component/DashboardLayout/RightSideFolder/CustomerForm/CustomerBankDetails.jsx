@@ -4,7 +4,6 @@ import { MdOutlineAccountBalance } from "react-icons/md";
 import { HiOutlineIdentification } from "react-icons/hi";
 const CustomerBankDetails = ({ data, colorIndex }) => {
   if (!data) return null;
-
   const colorSchemes = [
     { bg: "bg-gradient-to-br from-blue-50 to-blue-100", text: "text-blue-800", border: "border-blue-200" },
     { bg: "bg-gradient-to-br from-green-50 to-green-100", text: "text-green-800", border: "border-green-200" },
@@ -15,6 +14,15 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
 
   const colorScheme = colorSchemes[colorIndex % colorSchemes.length];
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const day = date.getDate();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[date.getMonth()];
+    return `${year}-${month}-${day}`;
+  };
   return (
     <div className={`${colorScheme.bg} ${colorScheme.border} cursor-pointer border-2 rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 w-full max-w-sm`}>
 
@@ -26,18 +34,13 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
           </div>
           <div>
             <h3 className={`text-sm font-bold ${colorScheme.text}`}>
-              {data.bankName}
+              {data.bank_name}
             </h3>
             <div className="flex items-center mt-1 space-x-1">
               <FiMapPin className={`text-sm ${colorScheme.text}`} />
-              <span className="text-sm text-gray-600">{data.headOffice}</span>
+              <span className="text-sm text-gray-600">{data.head_office}</span>
             </div>
           </div>
-        </div>
-
-        {/* Years Badge */}
-        <div className={`bg-white ${colorScheme.text} md:w-20 w-auto text-center rounded-xl shadow-sm`}>
-          <span className="text-sm font-bold">{data.totalYears}</span>
         </div>
       </div>
 
@@ -51,7 +54,7 @@ const CustomerBankDetails = ({ data, colorIndex }) => {
             </div>
             <div>
               <p className="text-xs text-gray-500 font-medium">START DATE</p>
-              <p className="font-bold text-gray-800">{data.contractStart}</p>
+              <p className="font-bold text-gray-800">{formatDate(data.contract_start)}</p>
             </div>
           </div>
           <FiClock className="text-green-400" />

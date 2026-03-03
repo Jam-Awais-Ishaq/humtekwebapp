@@ -1,4 +1,5 @@
 import api from "./api";
+import apiProduct from "./apiProduct";
 
 // ========== REGISTER ==========
 export const registerUser = async (data) => {
@@ -45,4 +46,18 @@ export const getCompanyProfile = async () => {
 export const sendEmail = async (data) => {
   const response = await api.post("/api/email/sendEmail", data);
   return response.data;
+};
+
+export const createCustomer = async (data) => {
+  const response = await apiProduct.post("/api/products/createCustomer", data);
+  return response.data;
+};
+
+export const getCustomers = async () => {
+  const res = await apiProduct.get("/api/products/getCustomers");
+  return res.data;
+};
+export const deleteCustomerById = async (id) => {
+  const res = await apiProduct.delete(`/api/products/deleteCustomer/${id}`);
+  return res.data;
 };

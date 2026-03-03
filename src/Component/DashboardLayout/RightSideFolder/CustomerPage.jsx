@@ -1,58 +1,69 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CustomerForm from './CustomerForm/CustomerForm'
 import CustomerBankDetails from './CustomerForm/CustomerBankDetails';
 import { Context } from '../../../Context/ContextProvider';
-
+import { createCustomer, getCustomersById } from '../../../api/AuthApi';
 const CustomerPage = () => {
     const [bankCards, setBankCards] = useState([]);
     const [colorIndex, setColorIndex] = useState(0);
-
     const { banks, setBanks, customers, setCustomers } = useContext(Context);
-    const handleFormSubmit = (formData) => {
-        // Add new bank card to the array
-        setBankCards(prev => [...prev, formData]);
 
-        setCustomers(prev => [...prev, formData]);
-        setBanks(prev => {
-            const alreadyExists = prev.includes(formData.bankName);
-            return alreadyExists ? prev : [...prev, formData.bankName];
-        });
-        setColorIndex(prev => (prev + 1) % 5); // Cycle through 5 colors
+    const handleFormSubmit = async (formData) => {
+        try {
+            const customer = await createCustomer(formData); // send to backend
+            setBankCards(prev => [...prev, customer]);
+            setCustomers(prev => [...prev, customer]);
+            setBanks(prev => {
+                const exists = prev.includes(customer.bank_name);
+                return exists ? prev : [...prev, customer.bank_name];
+            });
+            setColorIndex(prev => (prev + 1) % 5);
+        } catch (err) {
+            console.error(err.response?.data || err.message);
+        }
     };
 
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                const existingCustomers = await getCustomersById();
+                setBankCards(existingCustomers);
+                setCustomers(existingCustomers);
+                const uniqueBanks = [...new Set(existingCustomers.map(c => c.bank_name))];
+                setBanks(uniqueBanks);
+            } catch (err) {
+                console.error(err.response?.data || err.message);
+            }
+        };
+        fetchCustomers();
+    }, []);
     const handleDeleteCard = (id) => {
         const deletedCustomer = bankCards.find(card => card.id === id);
 
         setBankCards(prev => prev.filter(card => card.id !== id));
         setCustomers(prev => prev.filter(c => c.id !== id));
 
-        // 🔹 bank remove if no customer left with that bank
         setBanks(prev =>
             prev.filter(
                 bank =>
-                    bank !== deletedCustomer.bankName ||
+                    bank !== deletedCustomer.bank_name ||
                     customers.some(
-                        c => c.bankName === bank && c.id !== id
+                        c => c.bank_name === bank && c.id !== id
                     )
             )
         );
     };
-
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="max-w-6xl mx-auto space-y-8">
-                {/* Customer Form */}
                 <div className="mb-8">
                     <CustomerForm onSubmit={handleFormSubmit} />
                 </div>
-
-                {/* Bank Cards Grid */}
                 {bankCards.length > 0 && (
                     <div>
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">
                             Your Bank Cards ({bankCards.length})
                         </h2>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {bankCards.map((card, index) => (
                                 <div key={card.id} className="relative group">
@@ -60,7 +71,6 @@ const CustomerPage = () => {
                                         data={card}
                                         colorIndex={index % 5}
                                     />
-                                    {/* Delete Button */}
                                     <button
                                         onClick={() => handleDeleteCard(card.id)}
                                         className="absolute -top-2 -right-2 bg-red-500 text-white p-2 cursor-pointer rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600 shadow-lg"
@@ -75,8 +85,6 @@ const CustomerPage = () => {
                         </div>
                     </div>
                 )}
-
-                {/* Empty State */}
                 {bankCards.length === 0 && (
                     <div className="text-center py-12">
                         <div className="bg-white rounded-2xl p-8 max-w-md mx-auto shadow-sm">
@@ -91,7 +99,6 @@ const CustomerPage = () => {
                             <p className="text-gray-500 mb-6">
                                 Fill out the form above to create your first bank Customer First.
                             </p>
-
                         </div>
                     </div>
                 )}
@@ -99,5 +106,4 @@ const CustomerPage = () => {
         </div>
     )
 }
-
 export default CustomerPage;
