@@ -61,3 +61,13 @@ export const deleteCustomerById = async (id) => {
   const res = await apiProduct.delete(`/api/products/deleteCustomer/${id}`);
   return res.data;
 };
+
+export const addMachine = async (data) => {
+  const res = await apiProduct.post("/api/products/addMachine", data);
+  return res.data;
+};
+
+export const getMachines = async () => {
+  const res = await apiProduct.get("/api/products/getMachines");
+  return res.data;
+};

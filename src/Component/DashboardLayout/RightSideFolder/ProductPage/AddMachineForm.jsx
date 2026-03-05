@@ -1,59 +1,67 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../../../Context/ContextProvider";
+import { addMachine, getMachines } from "../../../../api/AuthApi";
 
 const AddMachineForm = () => {
   const [category, setCategory] = useState("");
   const [model, setModel] = useState("");
   const { machines, setMachines } = useContext(Context);
 
-  const handleAdd = () => {
+ 
+
+  const handleAdd = async () => {
     if (!category.trim() || !model.trim()) {
       alert("Please enter both category and model");
       return;
     }
+
     const currentMachines = machines || [];
 
-    // Case insensitive search
+    // Check if category exists
     const existingCategoryIndex = currentMachines.findIndex(
       (m) => m.category.toLowerCase().trim() === category.toLowerCase().trim()
     );
 
-    let updatedMachines;
-
     if (existingCategoryIndex !== -1) {
-      // Category exists - add model if not exists
       const existingCategory = currentMachines[existingCategoryIndex];
-      
-      if (!existingCategory.models.some(m => m.toLowerCase().trim() === model.toLowerCase().trim())) {
-        updatedMachines = [...currentMachines];
-        updatedMachines[existingCategoryIndex] = {
-          ...existingCategory,
-          models: [...existingCategory.models, model]
-        };
-        setMachines(updatedMachines);
-        alert(`Model "${model}" added successfully!`);
-      } else {
+      // Check if model exists
+      if (existingCategory.models.some(m => m.toLowerCase().trim() === model.toLowerCase().trim())) {
         alert(`Model "${model}" already exists in this category!`);
         return;
       }
-    } else {
-      // Create new category
-      updatedMachines = [...currentMachines, { 
-        category: category.trim(), 
-        models: [model.trim()] 
-      }];
-      setMachines(updatedMachines);
-      alert(`New category "${category}" created with model "${model}"!`);
     }
 
-    setCategory("");
-    setModel("");
+    // Call backend API
+    try {
+      const newMachine = await addMachine({ category, model });
+
+      let updatedMachines;
+      if (existingCategoryIndex !== -1) {
+        // Add model to existing category
+        updatedMachines = [...currentMachines];
+        updatedMachines[existingCategoryIndex] = {
+          ...currentMachines[existingCategoryIndex],
+          models: [...currentMachines[existingCategoryIndex].models, model]
+        };
+      } else {
+        // Create new category
+        updatedMachines = [...currentMachines, { category, models: [model] }];
+      }
+
+      setMachines(updatedMachines);
+      alert(`Machine "${category} - ${model}" added successfully!`);
+      setCategory("");
+      setModel("");
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert("Failed to add machine. Try again.");
+    }
   };
+
 
   return (
     <div className="p-4 mb-6 border rounded-lg bg-gray-50">
       <h3 className="font-semibold mb-3">Add Machine Category & Model</h3>
-
       <div className="grid grid-cols-2 gap-3">
         <input
           type="text"

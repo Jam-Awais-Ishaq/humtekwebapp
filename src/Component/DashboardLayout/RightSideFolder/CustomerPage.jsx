@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import CustomerForm from './CustomerForm/CustomerForm'
 import CustomerBankDetails from './CustomerForm/CustomerBankDetails';
 import { Context } from '../../../Context/ContextProvider';
-import { createCustomer, getCustomersById } from '../../../api/AuthApi';
+import { createCustomer, getCustomers, } from '../../../api/AuthApi';
 const CustomerPage = () => {
     const [bankCards, setBankCards] = useState([]);
     const [colorIndex, setColorIndex] = useState(0);
@@ -26,7 +26,7 @@ const CustomerPage = () => {
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const existingCustomers = await getCustomersById();
+                const existingCustomers = await getCustomers();
                 setBankCards(existingCustomers);
                 setCustomers(existingCustomers);
                 const uniqueBanks = [...new Set(existingCustomers.map(c => c.bank_name))];
