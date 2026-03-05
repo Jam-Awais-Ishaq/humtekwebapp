@@ -1,8 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../../../Context/ContextProvider";
 import BankInfoSection from "./BankInfoSection";
 import MachineSection from "./MachineSection";
 import ServiceSection from "./ServiceSection";
+import { getMachines } from "../../../../api/AuthApi";
 const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   const { invoices, setInvoices, showStatusModal, machines,setMachines } = useContext(Context);
   const isEditMode = Boolean(editInvoice);
@@ -66,6 +67,14 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
     }
     if (typeof onClose === "function") { onClose(); }
   };
+
+  useEffect(() => {
+  const fetchMachines = async () => {
+    const machinesFromBackend = await getMachines();
+    setMachines(machinesFromBackend);
+  };
+  fetchMachines();
+}, []);
   return (
     <div className="max-w-5xl mx-auto bg-white p-4">
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Banking Machine Service Invoice</h2>

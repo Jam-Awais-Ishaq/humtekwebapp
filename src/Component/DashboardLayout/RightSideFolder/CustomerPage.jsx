@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import CustomerForm from './CustomerForm/CustomerForm'
 import CustomerBankDetails from './CustomerForm/CustomerBankDetails';
 import { Context } from '../../../Context/ContextProvider';
-import { createCustomer, getCustomers, } from '../../../api/AuthApi';
+import { createCustomer, getCustomers,deleteCustomerById } from '../../../api/AuthApi';
 const CustomerPage = () => {
     const [bankCards, setBankCards] = useState([]);
     const [colorIndex, setColorIndex] = useState(0);
@@ -37,22 +37,24 @@ const CustomerPage = () => {
         };
         fetchCustomers();
     }, []);
-    const handleDeleteCard = (id) => {
-        const deletedCustomer = bankCards.find(card => card.id === id);
 
-        setBankCards(prev => prev.filter(card => card.id !== id));
-        setCustomers(prev => prev.filter(c => c.id !== id));
+    const handleDeleteCard = async (id) => {
+  try {
+    await deleteCustomerById(id.toString());
+    setBankCards(prev => prev.filter(card => card.id !== id));
+    setCustomers(prev => prev.filter(c => c.id !== id));
 
-        setBanks(prev =>
-            prev.filter(
-                bank =>
-                    bank !== deletedCustomer.bank_name ||
-                    customers.some(
-                        c => c.bank_name === bank && c.id !== id
-                    )
-            )
-        );
-    };
+    setBanks(prev =>
+      prev.filter(
+        bank =>
+          bank !== bankCards.find(c => c.id === id)?.bank_name ||
+          customers.some(c => c.bank_name === bank && c.id !== id)
+      )
+    );
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+  }
+};
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="max-w-6xl mx-auto space-y-8">

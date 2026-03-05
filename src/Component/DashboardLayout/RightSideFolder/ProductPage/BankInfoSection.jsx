@@ -15,7 +15,7 @@ const BankInfoSection = ({ invoice, handleChange }) => {
           required
           className="w-full px-4 py-3 rounded-lg border border-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
         >
-          <option value="">Made Custormer before creating invoice</option>
+          <option value="">Select Bank</option>
 
           {banks.map((bank, index) => (
             <option key={index} value={bank}>

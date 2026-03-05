@@ -59,6 +59,14 @@ const AddMachineForm = () => {
   };
 
 
+  useEffect(() => {
+  const fetchMachines = async () => {
+    const machinesFromBackend = await getMachines(); // backend API
+    setMachines(machinesFromBackend); // update Context
+  };
+  fetchMachines();
+}, []);
+
   return (
     <div className="p-4 mb-6 border rounded-lg bg-gray-50">
       <h3 className="font-semibold mb-3">Add Machine Category & Model</h3>

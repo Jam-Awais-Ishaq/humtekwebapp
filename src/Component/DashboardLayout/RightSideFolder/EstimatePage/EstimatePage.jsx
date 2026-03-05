@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import EstimateCustomerInfo from "./EstimateCustomerInfo";
 import EstimateMachineInfo from "./EstimateMachineInfo";
 import PartsTable from "./PartsTable";
@@ -8,6 +8,7 @@ import { ViewEstimate } from "./ViewEstimate";
 import { Download } from "lucide-react";
 import Modal from "../../../common/Modal";
 import { generateEstimatePDF } from "../../../../utils/estimatePDF";
+import { getMachines } from "../../../../api/AuthApi";
 
 export default function EstimatePage() {
   const [form, setForm] = useState({
@@ -29,7 +30,7 @@ export default function EstimatePage() {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const { openModal, setOpenModal, machines } = useContext(Context)
+  const { openModal, setOpenModal, machines, setMachines } = useContext(Context)
 
   const memoizedMachines = useMemo(() => machines, [machines]);
 
@@ -157,6 +158,15 @@ export default function EstimatePage() {
     setSelected(item);
     setOpenModal(true);
   }
+  
+
+  useEffect(() => {
+    const fetchMachines = async () => {
+      const machinesFromBackend = await getMachines();
+      setMachines(machinesFromBackend);
+    };
+    fetchMachines();
+  }, []);
   return (
     <>
       <div className="max-w-6xl mx-auto p-6 md:p-6 bg-gray-50 min-h-screen space-y-8">
