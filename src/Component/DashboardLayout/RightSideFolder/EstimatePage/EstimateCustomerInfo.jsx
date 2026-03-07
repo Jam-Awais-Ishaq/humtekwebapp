@@ -22,7 +22,7 @@ const EstimateCustomerInfo = ({ form, handleChange }) => {
             <option value="">Select Bank</option>
 
             {banks.map((bank, index) => (
-              <option key={bank} value={bank}>
+              <option key={index} value={bank}>
                 {bank}
               </option>
             ))}

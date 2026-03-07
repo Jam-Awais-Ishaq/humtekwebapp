@@ -7,11 +7,11 @@ export const ViewEstimate = ({ data }) => {
     const taxAmount = (subTotal * Number(taxPercent || 0)) / 100;
     return subTotal + taxAmount;
   };
-  // calculate totals
-  const partsTotal = data.items?.reduce(
-    (acc, item) => acc + calculateTotalWithTax(item.qty, item.price, item.tax),
-    0
-  ) || 0;
+  // calculate totals for each part and grand total
+const partsTotal = data.parts?.reduce(
+  (acc, part) => acc + calculateTotalWithTax(part.qty, part.price, part.tax),
+  0
+) || 0;
 
   return (
     <div className="p-3 space-y-6 ">
@@ -53,7 +53,7 @@ export const ViewEstimate = ({ data }) => {
       {/* Parts / Services Table */}
       <div className="mt-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-2 border-b pb-1">Parts / Services</h3>
-        {data.items?.length > 0 ? (
+        {data.parts?.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg">
               {/* Table Header */}
@@ -69,14 +69,14 @@ export const ViewEstimate = ({ data }) => {
 
               {/* Table Body */}
               <tbody>
-                {data.items.map((item, index) => {
-                  const total = calculateTotalWithTax(item.qty, item.price, item.tax);
+                {data.parts.map((part, index) => {
+                  const total = calculateTotalWithTax(part.qty, part.price, part.tax);
                   return (
                     <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50 transition">
-                      <td className="px-4 py-2">{item.partName}</td>
-                      <td className="px-4 py-2 text-right">{item.qty}</td>
-                      <td className="px-4 py-2 text-right">{item.price.toFixed(2)}</td>
-                      <td className="px-4 py-2 text-right">{(item.tax || 0).toFixed(2)}</td>
+                      <td className="px-4 py-2">{part.partName}</td>
+                      <td className="px-4 py-2 text-right">{part.qty}</td>
+                      <td className="px-4 py-2 text-right">{part.price.toFixed(2)}</td>
+                      <td className="px-4 py-2 text-right">{(part.tax || 0).toFixed(2)}</td>
                       <td className="px-4 py-2 text-right font-semibold">{total.toFixed(2)}</td>
                     </tr>
                   );
