@@ -61,8 +61,8 @@ const AddMachineForm = () => {
 
   useEffect(() => {
   const fetchMachines = async () => {
-    const machinesFromBackend = await getMachines(); // backend API
-    setMachines(machinesFromBackend); // update Context
+    const machinesFromBackend = await getMachines();
+    setMachines(machinesFromBackend);
   };
   fetchMachines();
 }, []);

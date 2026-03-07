@@ -1,7 +1,6 @@
 import api from "./api";
 import apiProduct from "./apiProduct";
 
-// ========== REGISTER ==========
 export const registerUser = async (data) => {
   const response = await api.post("/api/auth/register", data);
   return response.data;
@@ -69,5 +68,28 @@ export const addMachine = async (data) => {
 
 export const getMachines = async () => {
   const res = await apiProduct.get("/api/products/getMachines");
+  return res.data;
+};
+
+export const createEstimate = async (data) => {
+  // POST request to create a new estimate
+  const res = await apiProduct.post("/api/products/addEstimate", data);
+  return res.data;
+};
+
+export const getEstimates = async () => {
+  // GET request to fetch all estimates
+  const res = await apiProduct.get("/api/products/getEstimates");
+  return res.data;
+};
+
+export const updateEstimate = async (id, data) => {
+  // PUT request to update an existing estimate by id
+  const res = await apiProduct.put(`/api/products/updateEstimate/${id}`, data);
+  return res.data;
+};
+
+export const deleteEstimate = async (id) => {
+  const res = await apiProduct.delete(`/api/products/deleteEstimate/${id}`);
   return res.data;
 };

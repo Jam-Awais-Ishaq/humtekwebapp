@@ -10,17 +10,14 @@ const MachineSection = ({ invoice, setInvoice, machines }) => {
 
   // Debug: Check machines data
   useEffect(() => {
-    console.log("🔄 MachineSection received machines:", JSON.stringify(machines, null, 2));
   }, [machines]);
 
   // ===== derive categories dynamically =====
   const categories = useMemo(() => {
     if (!machines || machines.length === 0) {
-      console.log("No machines available");
       return [];
     }
     const cats = machines.map(m => m.category);
-    console.log("📋 All categories:", cats);
     return cats;
   }, [machines]);
 
@@ -35,21 +32,17 @@ const MachineSection = ({ invoice, setInvoice, machines }) => {
       m => m.category.toLowerCase().trim() === invoice.category.toLowerCase().trim()
     );
 
-    console.log("🔍 Selected category object:", selectedCategory);
 
     if (!selectedCategory) {
-      console.log("❌ Category not found:", invoice.category);
       return [];
     }
 
-    console.log("✅ Models found:", selectedCategory.models);
     return selectedCategory.models || [];
   };
 
   // ===== filtered models with search =====
   const filteredModels = useMemo(() => {
     const allModels = getModelsForCategory();
-    console.log("🎯 All models for category:", allModels);
 
     if (!searchModel) {
       return allModels;
@@ -85,7 +78,6 @@ const MachineSection = ({ invoice, setInvoice, machines }) => {
 
   // ===== Select category =====
   const selectCategory = (cat) => {
-    console.log("📌 Selected category:", cat);
     setInvoice({
       ...invoice,
       category: cat,
@@ -98,7 +90,6 @@ const MachineSection = ({ invoice, setInvoice, machines }) => {
 
   // ===== Select model =====
   const selectModel = (mod) => {
-    console.log("📌 Selected model:", mod);
     setInvoice({
       ...invoice,
       machineModel: mod,

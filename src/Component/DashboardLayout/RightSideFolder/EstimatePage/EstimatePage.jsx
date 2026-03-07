@@ -8,13 +8,12 @@ import { ViewEstimate } from "./ViewEstimate";
 import { Download } from "lucide-react";
 import Modal from "../../../common/Modal";
 import { generateEstimatePDF } from "../../../../utils/estimatePDF";
-import { getMachines } from "../../../../api/AuthApi";
+import { createEstimate, deleteEstimate, getEstimates, getMachines, updateEstimate } from "../../../../api/AuthApi";
 
 export default function EstimatePage() {
   const [form, setForm] = useState({
     bankName: "",
     branchName: "",
-    branchAddress: "",
     machineName: "",
     machineModel: "",
     complaintNo: "",
@@ -32,7 +31,7 @@ export default function EstimatePage() {
 
   const { openModal, setOpenModal, machines, setMachines } = useContext(Context)
 
-  const memoizedMachines = useMemo(() => machines, [machines]);
+  // const memoizedMachines = useMemo(() => machines, [machines]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,9 +51,9 @@ export default function EstimatePage() {
   const handleItemChange = (index, field, value) => {
     const updated = [...form.items];
 
-    // convert qty and price to number
-    if (field === "qty" || field === "price" || field === "tax") {
-      updated[index][field] = Number(value) || 0;
+    if (["qty", "price", "tax"].includes(field)) {
+      // agar empty hai to "" rakho, warna number
+      updated[index][field] = value === "" ? "" : Number(value);
     } else {
       updated[index][field] = value;
     }
@@ -62,61 +61,90 @@ export default function EstimatePage() {
     setForm((p) => ({ ...p, items: updated }));
   };
 
-
   const handlePartsChange = (parts) => {
     setForm((prev) => ({ ...prev, parts }));
   };
 
-  const handleSubmit = () => {
-    if (isEditing && selected) {
-      const updatedItem = {
-        ...selected,
-        ...form,
-        machine: form.machineName,
-        model: form.machineModel,
-      };
+  const handleSubmit = async () => {
+    try {
+      if (isEditing && selected) {
+        const updatedFromApi = await updateEstimate(selected.id, form);
+        const updatedItem = {
+          ...selected,
+          ...form,
+          machine: form.machineName,
+          model: form.machineModel,
+          ...updatedFromApi
+        };
 
-      setEstimates(prev =>
-        prev.map(e => e.id === selected.id ? updatedItem : e)
-      );
+        setEstimates(prev =>
+          prev.map(e => e.id === selected.id ? updatedItem : e)
+        );
+        setSelected(updatedItem);
+      } else {
+        const newFromApi = await createEstimate(form);
+        const newEstimate = {
+          ...newFromApi,
+          machine: newFromApi.machine_name,
+          model: newFromApi.machine_model,
+          bankName: newFromApi.bank_name,
+          branchName: newFromApi.branch_name,
+          complaintNo: newFromApi.complaint_no
 
-      // NEW → sync selected with updated
-      setSelected(updatedItem);
-    } else {
-      // CREATE MODE
-      const newEstimate = {
-        id: Date.now(),
-        ...form,
-        machine: form.machineName,
-        model: form.machineModel
-      };
+        };
 
-      setEstimates(prev => [...prev, newEstimate]);
+        setEstimates(prev => [...prev, newEstimate]);
+      }
+
+      // Close + Reset
+      setOpenModal({
+        open: true,
+        type: "success",
+        title: isEditing ? "Updated" : "Created",
+        message: `Estimate ${isEditing ? "updated" : "created"} successfully.`,
+        primaryButtonText: "OK",
+      });
+      setIsEditing(false);
+      setSelected(null);
+
+      setForm({
+        bankName: "",
+        branchName: "",
+        machineName: "",
+        machineModel: "",
+        complaintNo: "",
+        estimateNo: "",
+        estimateDate: "",
+        items: [],
+        parts: [],
+      });
+
+    } catch (err) {
+      console.error("Error saving estimate:", err);
     }
-
-    // Close + Reset
-    setOpenModal(false);
-    setIsEditing(false);
-    setSelected(null);
-
-    setForm({
-      bankName: "",
-      branchName: "",
-      branchAddress: "",
-      machineName: "",
-      machineModel: "",
-      complaintNo: "",
-      estimateNo: "",
-      estimateDate: "",
-      items: [],
-      parts: [],
-    });
   };
 
 
-  const handleDelete = (id) => {
-    setEstimates(prev => prev.filter(e => e.id !== id));
-  }
+  const handleDelete = async (id) => {
+    try {
+      await deleteEstimate(id);
+
+      setEstimates(prev =>
+        prev.filter(est => est.id !== id)
+      );
+
+      setOpenModal({
+        open: true,
+        type: "success",
+        title: "Deleted",
+        message: "Estimate deleted successfully.",
+        primaryButtonText: "OK",
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleEdit = (item) => {
     const fresh = estimates.find(e => e.id === item.id) || item;
@@ -127,38 +155,39 @@ export default function EstimatePage() {
     setForm({
       bankName: fresh.bankName,
       branchName: fresh.branchName,
-      branchAddress: fresh.branchAddress,
       machineName: fresh.machine,
       machineModel: fresh.model,
       complaintNo: fresh.complaintNo,
       estimateNo: fresh.estimateNo,
       estimateDate: fresh.estimateDate,
-      items: fresh.items,
-      parts: fresh.parts,
+      items: [...fresh.items],
+      parts: [...fresh.parts],
     });
 
     setOpenModal(true);
   };
+  const searchText = (search || "").toLowerCase();
 
-
-
-  const filteredEstimates = estimates.filter(e => {
-    const q = search.toLowerCase();
-    return (
-      String(e.complaintNo || "").toLowerCase().includes(q) ||
-      String(e.bankName || "").toLowerCase().includes(q) ||
-      String(e.branchName || "").toLowerCase().includes(q) ||
-      String(e.machine || "").toLowerCase().includes(q) || // ✔ corrected
-      String(e.model || "").toLowerCase().includes(q)
+  const filteredEstimates = useMemo(() => {
+    return estimates.filter(e =>
+      e.bankName?.toLowerCase().includes(searchText) ||
+      e.branchName?.toLowerCase().includes(searchText) ||
+      e.complaintNo?.toLowerCase().includes(searchText)
     );
-  });
+  }, [estimates, searchText]);
 
 
   const handleOpenModal = (item) => {
     setSelected(item);
-    setOpenModal(true);
+    setOpenModal({
+      open: true,
+      type: "view",
+      title: `Estimate for Complaint #${item.complaintNo}`,
+      message: "",
+      primaryButtonText: "Close",
+    });
   }
-  
+
 
   useEffect(() => {
     const fetchMachines = async () => {
@@ -166,15 +195,40 @@ export default function EstimatePage() {
       setMachines(machinesFromBackend);
     };
     fetchMachines();
+  }, [setMachines]);
+
+  useEffect(() => {
+    const fetchEstimates = async () => {
+      try {
+        const data = await getEstimates();
+
+        const formatted = data.map(e => ({
+          ...e,
+          machine: e.machine_name,
+          model: e.machine_model,
+          bankName: e.bank_name,
+          branchName: e.branch_name,
+          complaintNo: e.complaint_no,
+          estimateNo: e.estimate_no,
+          estimateDate: e.estimate_date ? e.estimate_date.split("T")[0] : ""
+        }));
+
+        setEstimates(formatted);
+
+      } catch (err) {
+        console.error("Error fetching estimates:", err);
+      }
+    };
+
+    fetchEstimates();
   }, []);
   return (
     <>
       <div className="max-w-6xl mx-auto p-6 md:p-6 bg-gray-50 min-h-screen space-y-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Create Estimate</h1>
-
         <div className="space-y-8">
           <EstimateCustomerInfo form={form} handleChange={handleChange} />
-          <EstimateMachineInfo machines={memoizedMachines} form={form} handleChange={handleChange} handlePartsChange={handlePartsChange} />
+          <EstimateMachineInfo machines={machines} form={form} handleChange={handleChange} handlePartsChange={handlePartsChange} />
           <PartsTable items={form.items} handleAddItem={handleAddItem} handleItemChange={handleItemChange} />
         </div>
 
@@ -218,6 +272,7 @@ export default function EstimatePage() {
                   <tr className="bg-gray-100/80 text-gray-700 border-b">
                     <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Complaint #</th>
                     <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Bank Name</th>
+                    <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Branch Name</th>
                     <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Category</th>
                     <th className="px-4 py-3 text-left font-medium whitespace-nowrap">Model</th>
                     <th className="px-4 py-3 text-center font-medium whitespace-nowrap">Actions</th>
@@ -225,9 +280,10 @@ export default function EstimatePage() {
                 </thead>
 
                 <tbody className="divide-y">
-                  {filteredEstimates.map((item, index) => (
-                    <tr key={index} className="">
+                  {filteredEstimates.map((item) => (
+                    <tr key={item.id} className="">
                       <td className="px-4 py-3 font-medium text-gray-800">{item.complaintNo}</td>
+                      <td className="px-4 py-3 text-gray-700">{item.bankName}</td>
                       <td className="px-4 py-3 text-gray-700">{item.branchName}</td>
                       <td className="px-4 py-3 text-gray-700">{item.machine}</td>
                       <td className="px-4 py-3 text-gray-700">{item.model}</td>
@@ -266,7 +322,7 @@ export default function EstimatePage() {
         {isEditing ? (
           <>
             <EstimateCustomerInfo form={form} handleChange={handleChange} />
-            <EstimateMachineInfo  machines={memoizedMachines}  handleChange={handleChange} allMachineNames={["Counting Machine", "Shrink Wraping Machine", "Bundle Binding Machine", "Hitachi"]} form={form} handlePartsChange={handlePartsChange} />
+            <EstimateMachineInfo machines={machines} handleChange={handleChange} form={form} handlePartsChange={handlePartsChange} />
             <PartsTable items={form.items} handleAddItem={handleAddItem} handleItemChange={handleItemChange} />
 
             <button

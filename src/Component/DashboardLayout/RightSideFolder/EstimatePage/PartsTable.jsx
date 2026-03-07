@@ -1,4 +1,5 @@
 const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
+
   return (
     <div className="bg-white p-6 rounded-xl shadow-md space-y-4">
       <div className="flex justify-between items-center">
@@ -33,7 +34,6 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
               const taxAmount = (subTotal * taxPercent) / 100;
               const total = subTotal + taxAmount;
 
-
               return (
                 <tr key={i} className="border-b border-gray-200">
                   <td className="p-3">
@@ -50,7 +50,7 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       value={row.qty ?? ""}
-                      onChange={(e) => handleItemChange(i, "qty", Number(e.target.value))}
+                      onChange={(e) => handleItemChange(i, "qty", e.target.value)}
                       min={0}
                     />
                   </td>
@@ -59,7 +59,7 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       value={row.price ?? ""}
-                      onChange={(e) => handleItemChange(i, "price", Number(e.target.value))}
+                      onChange={(e) => handleItemChange(i, "price", e.target.value)}
                       min={0}
                     />
                   </td>
@@ -67,7 +67,7 @@ const PartsTable = ({ items, handleAddItem, handleItemChange }) => {
                     <input
                       type="number"
                       value={row.tax ?? ""}
-                      onChange={(e) => handleItemChange(i, "tax", Number(e.target.value))}
+                      onChange={(e) => handleItemChange(i, "tax", e.target.value)}
                       className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       min={0}
                     />

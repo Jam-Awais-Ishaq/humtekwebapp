@@ -36,7 +36,7 @@ const EstimateMachineInfo = ({ form, handleChange, allMachineNames = [], machine
   // ===== GET MODELS FOR SELECTED MACHINE =====
   const allModels = useMemo(() => {
     if (!form.machineName || !machines || machines.length === 0) {
-      console.log("❌ No machine selected or machines empty");
+      console.log(" No machine selected or machines empty");
       return [];
     }
 
@@ -46,7 +46,7 @@ const EstimateMachineInfo = ({ form, handleChange, allMachineNames = [], machine
     );
 
     if (!selectedMachine) {
-      console.log("❌ No matching machine found for:", form.machineName);
+      console.log("No matching machine found for:", form.machineName);
       return [];
     }
 
@@ -210,7 +210,7 @@ const EstimateMachineInfo = ({ form, handleChange, allMachineNames = [], machine
             onKeyDown={handleModelKeyDown}
             placeholder={form.machineName ? "Select model..." : "Select machine first"}
             disabled={!form.machineName}
-            className={`border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${!form.machineName ? "bg-gray-100 cursor-not-allowed" : ""
+            className={`border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${!form.machineName ? "bg-gray-100 " : ""
               }`}
           />
 
