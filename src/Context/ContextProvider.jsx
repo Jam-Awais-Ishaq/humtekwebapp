@@ -1,5 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import GenericStatusModal from "../Component/common/GenericStatusModal";
+import { getCustomers } from "../api/AuthApi";
 
 export const Context = createContext();
 
@@ -10,7 +11,28 @@ export const ContextProvider = ({ children }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [openChat, setChatOpen] = useState(false);
     const [banks, setBanks] = useState([]);
+
     const [customers, setCustomers] = useState([]);
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                const data = await getCustomers();
+
+                setCustomers(data);
+
+                const uniqueBanks = [...new Set(data.map(c => c.bank_name))];
+                setBanks(uniqueBanks);
+
+            } catch (err) {
+                console.error(err.response?.data || err.message);
+            }
+        };
+
+        fetchCustomers();
+    }, []);
+
+
+
     const [machines, setMachines] = useState([]);
 
     // User Profile Data 
@@ -25,7 +47,7 @@ export const ContextProvider = ({ children }) => {
     // Generic alert modal close function
     const closeStatusModal = () => { setStatusModal((prev) => ({ ...prev, open: false })); };
     return (
-        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen, machines, setMachines , banks, setBanks, customers,setCustomers}}>
+        <Context.Provider value={{ openModal, setOpenModal, invoices, setInvoices, statusModal, setStatusModal, showStatusModal, closeStatusModal, editInvoice, setEditInvoice, isEditMode, setIsEditMode, userProfile, setUserProfile, openChat, setChatOpen, machines, setMachines, banks, setBanks, customers, setCustomers }}>
             {children}
             <GenericStatusModal open={statusModal.open} type={statusModal.type} title={statusModal.title} message={statusModal.message} primaryButtonText={statusModal.primaryButtonText} onPrimaryAction={() => { statusModal.onPrimaryAction?.(); closeStatusModal(); }} onClose={closeStatusModal} />
         </Context.Provider>

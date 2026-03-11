@@ -10,16 +10,14 @@ const InvoiceView = ({ invoice, onClose }) => {
     const { showStatusModal, customers } = useContext(Context);
 
     const handleGenericAlert = async () => {
-        const customer = customers?.find(
-            (c) => c.bankName === invoice.bankName
-        );
+
         const finalInvoice = {
             ...invoice,
-            headOffice: customer?.headOffice || "-",
-            ntn: customer?.ntn || "-",
-            strn: customer?.strn || "-",
+            headOffice: invoice?.headOffice || "-",
+            customerNtn: invoice?.ntn || "-",
         };
         await generateInvoicePDF(finalInvoice);
+        console.log("PDF generated:", finalInvoice);
         if (typeof showStatusModal === "function") {
             showStatusModal({
                 type: "info",
@@ -45,16 +43,16 @@ const InvoiceView = ({ invoice, onClose }) => {
                 <Info label="Bank Name" value={invoice.bankName} />
                 <Info label="Branch Code" value={invoice.branchCode} />
                 <Info label="Category" value={invoice.category} />
-                <Info label="Product Model" value={invoice.productModel} />
-                <Info label="Machine Serial" value={invoice.discount} />
-                <Info label="Invoice Date" value={invoice.invoiceDate || "-"} />
+                <Info label="Product Model" value={invoice.machineModel} />
+                <Info label="Discount" value={invoice.discount} />
+                <Info label="Invoice Date" value={invoice?.invoiceDate?.split("T")[0] || "-"} />
                 <Info label="Service Charges Amount" value={`Rs. ${invoice.amount?.toLocaleString() || 0}`} />
                 <Info label="Total Amount" value={`Rs. ${invoice.totalAmount?.toLocaleString() || 0}`} />
             </div>
             <Info label="Status" value={invoice.status || "Pending"} />
 
             {/* ===== PARTS TABLE ===== */}
-            {invoice.parts?.length > 0 && (
+            {(invoice.parts || []).length > 0 && (
                 <div className="mt-6">
                     <h3 className="font-semibold text-lg mb-2">Parts Details</h3>
 

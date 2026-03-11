@@ -17,7 +17,7 @@ const MachineSection = ({ invoice, setInvoice, machines }) => {
     if (!machines || machines.length === 0) {
       return [];
     }
-    const cats = machines.map(m => m.category);
+    const cats = [...new Set(machines.map(m => m.category))];
     return cats;
   }, [machines]);
 

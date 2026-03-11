@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../../common/Modal";
 import InvoiceView from "./InvoiceView";
 import { Context } from "../../../Context/ContextProvider";
 import BankServiceInvoiceForm from "./ProductPage/BankServiceInvoiceForm";
 import { LinkIcon } from "lucide-react";
+import { deleteInvoice, getInvoices } from "../../../api/AuthApi";
 
 const InvoicesPage = () => {
 
@@ -12,31 +13,70 @@ const InvoicesPage = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [search, setSearch] = useState("");
 
-  const filteredInvoices = invoices.filter(
-    (inv) =>
-      inv.branchCode.toLowerCase().includes(search.toLowerCase()) ||
-      inv.bankName.toLowerCase().includes(search.toLowerCase()) ||
-      inv.product.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredInvoices = React.useMemo(() => {
+    return invoices.filter((inv) =>
+      (inv.branchCode || "").toLowerCase().includes(search.toLowerCase()) ||
+      (inv.bankName || "").toLowerCase().includes(search.toLowerCase()) ||
+      (inv.productModel || "").toLowerCase().includes(search.toLowerCase())
+    );
+  }, [invoices, search]);
 
   const handleView = (invoice) => {
     setSelectedInvoice(invoice);
     setOpenModal(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Delete this invoice?")) {
-      setInvoices(invoices.filter((inv) => inv.id !== id));
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Delete this invoice?");
+    if (!confirmDelete) return;
+    try {
+      await deleteInvoice(id); // 🔹 backend delete
+
+      // 🔹 frontend state update
+      setInvoices((prev) => prev.filter((inv) => inv.id !== id));
+
+      showStatusModal?.({
+        type: "success",
+        title: "Deleted",
+        message: "Invoice deleted successfully.",
+        primaryButtonText: "OK",
+      });
+
+    } catch (error) {
+      console.error("Delete error:", error);
+
+      showStatusModal?.({
+        type: "error",
+        title: "Error",
+        message: "Failed to delete invoice.",
+        primaryButtonText: "OK",
+      });
     }
   };
 
   const handleEditsInvoice = (invoice) => {
-
+    console.log("Editing invoice:", invoice);
     setEditInvoice(invoice);
     setIsEditMode(true);
     setOpenModal(true);
   }
 
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const data = await getInvoices();
+        console.log("Fetched invoices:", data)
+        setInvoices(data);
+
+      } catch (err) {
+        console.error(err);
+      }
+
+    };
+
+    fetchInvoices();
+
+  }, []);
   return (
     <>
       <div className="p-6 space-y-6">
@@ -91,17 +131,19 @@ const InvoicesPage = () => {
                       <td className="px-4 py-3 text-gray-600">
                         {inv.discount}
                       </td>
-                      <td className="px-4 py-3 text-red">{inv.productModel}</td>
+                      <td className="px-4 py-3 text-red">{inv.machineModel}</td>
 
                       {/* AMOUNT */}
                       <td className="px-4 py-3 font-semibold text-green-600">
-                        Rs. {inv.amount.toLocaleString(inv)}
+                        Rs. {(inv.amount ?? 0).toLocaleString()}
                       </td>
 
-                      <button type="button" className="border border-blue-500 mt-3 text-blue-500 hover:bg-blue-50 px-3 py-1 rounded-md"> 
-                        <LinkIcon size={16} className="inline mr-1" />
-                        link to fbr
-                      </button>
+                      <td className="px-4 py-3 text-center">
+                        <button type="button" className="border border-blue-500 mt-3 text-blue-500 hover:bg-blue-50 px-3 py-1 rounded-md">
+                          <LinkIcon size={16} className="inline mr-1" />
+                          link to fbr
+                        </button>
+                      </td>
                       {/* ACTIONS */}
                       <td className="px-4 py-3">
                         <div className="flex justify-center gap-3">

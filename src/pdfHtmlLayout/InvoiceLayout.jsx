@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import logo from '../assets/GearLogo.png';
 import { Context } from '../Context/ContextProvider';
-const InvoiceLayout = ({ invoice }) => {
+const InvoiceLayout = ({ invoice,customerNtn,customerHeadOffice }) => {
     const partItems = invoice?.parts?.length
         ? invoice.parts.map((part) => ({
             parts: part,
@@ -53,10 +53,7 @@ const InvoiceLayout = ({ invoice }) => {
     const MIN_ROWS = 4;
     const rows = invoice?.items || [];
     const emptyRows = Math.max(0, MIN_ROWS - rows.length);
-
-
     
-
     return (
         <div
             className="p-3 w-full max-w-3xl mx-auto h-auto rounded-lg">
@@ -84,12 +81,12 @@ const InvoiceLayout = ({ invoice }) => {
                         <div className="font-[calibri] text-md text-[#172554]">
                             <span className="italic">Invoice to : <br /> {invoice?.bankName || "-"}</span>
                             <p className=" italic">
-                                {invoice?.headOffice || "-"}
+                                { invoice?.headOffice || "-"}
                             </p>
                         </div>
 
                         <div>
-                            <h6 className="text-[#172554] font-normal text-sm italic">NTN No : {invoice?.ntn || "-"}</h6>
+                            <h6 className="text-[#172554] font-normal text-sm italic">NTN No : {invoice?.customerNtn || "-"}</h6>
                         </div>
                     </div>
                 </div>
@@ -102,7 +99,7 @@ const InvoiceLayout = ({ invoice }) => {
                     <div>
                         <div className="flex items-center ">
                             <p className=" underline text-[#172554] font-[cambria] text-[15px]">Invoice Date:</p>
-                            <p className="ml-7 text-[#0891b2]">{invoice?.invoiceDate || "-"}</p>
+                            <p className="ml-7 text-[#0891b2]">{invoice?.invoiceDate.split("T")[0] || "-"}</p>
                         </div>
                     </div>
                     <div>

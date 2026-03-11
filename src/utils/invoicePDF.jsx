@@ -3,7 +3,7 @@ import html2canvas from "html2canvas";
 import { createRoot } from 'react-dom/client';
 import InvoiceLayout from "../pdfHtmlLayout/InvoiceLayout"; // 🔹 NEW CODE
 
-export const generateInvoicePDF = (invoice) => {
+export const generateInvoicePDF = (invoice,customer) => {
   return new Promise((resolve, reject) => {
     let root = null;
     let container = null;
@@ -17,7 +17,7 @@ export const generateInvoicePDF = (invoice) => {
       document.body.appendChild(container);
 
       root = createRoot(container);
-      root.render(<InvoiceLayout invoice={invoice} />);
+      root.render(<InvoiceLayout invoice={invoice}  />);
 
       setTimeout(async () => {
         try {
