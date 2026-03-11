@@ -48,7 +48,8 @@ const ServiceSection = ({ invoice, setInvoice, handleChange, isEditMode }) => {
   const grandTotal =
     parts.reduce((sum, p) => sum + Number(p.total || 0), 0) +
     Number(invoice.amount || 0) +
-    (Number(invoice.amount || 0) * Number(invoice.tax || 0)) / 100;
+    (Number(invoice.amount || 0) * Number(invoice.tax || 0)) / 100 -
+    Number(invoice.discount || 0);
 
   return (
     <div className="space-y-6">

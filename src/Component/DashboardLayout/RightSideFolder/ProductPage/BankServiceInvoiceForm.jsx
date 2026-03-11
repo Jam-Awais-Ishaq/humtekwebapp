@@ -8,6 +8,7 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
   const { invoices, setInvoices, showStatusModal, machines, setMachines } = useContext(Context);
   const isEditMode = Boolean(editInvoice);
 
+
   const [invoice, setInvoice] = useState(
     editInvoice
       ? { ...editInvoice, parts: editInvoice.parts || [], selectedMachines: editInvoice.selectedMachines || [], invoiceDate: editInvoice.invoiceDate ? editInvoice.invoiceDate.split("T")[0] : "" }
@@ -26,30 +27,48 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
         parts: [],
       }
   );
+
+
+
+  const calculateTotal = (invoice) => {
+    const partsTotal = (invoice.parts || []).reduce(
+      (sum, p) => sum + Number(p.total || 0),
+      0
+    );
+
+    const serviceTotal =
+      Number(invoice.amount || 0) +
+      (Number(invoice.amount || 0) * Number(invoice.tax || 0)) / 100;
+
+    return serviceTotal + partsTotal;
+  };
+
   const handleChange = (e) => { setInvoice({ ...invoice, [e.target.name]: e.target.value }); };
   const totalAmount = Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
   const partsTotal = (invoice.parts || []).reduce((sum, p) => sum + Number(p.total || 0), 0);
   const serviceTotal = Number(invoice.amount) + (Number(invoice.amount) * Number(invoice.tax)) / 100;
   const finalTotal = serviceTotal + partsTotal;
-  const generateInvoiceNumber = () => {
-    const last = Number(localStorage.getItem("lastInvoiceNo")) || 0;
-    const next = last + 1;
-    localStorage.setItem("lastInvoiceNo", next);
-    return `HS${String(next).padStart(3, "0")}`;
-  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
 
+      const finalTotal = calculateTotal(invoice);
+
       const payload = {
         ...invoice,
-        totalAmount: finalTotal,
+        totalAmount: finalTotal
       };
+
       if (editInvoice) {
+
         const updated = await updateInvoice(editInvoice.id, payload);
+
         setInvoices(prev =>
-          prev.map(inv => inv.id === editInvoice.id ? updated : inv)
+          prev.map(inv =>
+            inv.id === editInvoice.id ? updated : inv
+          )
         );
 
       } else {
@@ -60,19 +79,18 @@ const BankServiceInvoiceForm = ({ editInvoice, onClose }) => {
 
       }
 
-      if (typeof showStatusModal === "function") {
-        showStatusModal({
-          type: "success",
-          title: editInvoice ? "Invoice Updated" : "Invoice Created",
-          message: editInvoice
-            ? "Invoice updated successfully."
-            : "Invoice created successfully.",
-        });
-      }
-
-      if (typeof onClose === "function") {
-        onClose();
-      }
+      showStatusModal({
+        show: true,
+        message: isEditMode ? "Invoice updated successfully!" : "Invoice created successfully!",
+        type: "success",
+        primaryAction: {
+          label: "Go to Invoices",
+          onClick: () => {
+            onClose?.();
+          }
+        }
+      });
+      onClose?.();
 
     } catch (err) {
       console.error(err);
