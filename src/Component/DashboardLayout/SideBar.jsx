@@ -1,7 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import {
   Dashboard,
-  Analytics,
   Inventory,
   ReceiptLong,
   People,
@@ -13,7 +12,6 @@ import imgLogo from "@/assets/Logo.jpeg";
 import { Crown, User } from "lucide-react";
 const menuItems = [
   { text: "Dashboard", icon: <Dashboard />, path: "/dashboard", end: true },
-  { text: "Analytics", icon: <Analytics />, path: "/dashboard/analytics", end: true },
   { text: "Products", icon: <Inventory />, path: "/dashboard/products" },
   { text: "Invoices", icon: <ReceiptLong />, path: "/dashboard/invoices", end: true },
   { text: "Customers", icon: <People />, path: "/dashboard/customers", end: true },

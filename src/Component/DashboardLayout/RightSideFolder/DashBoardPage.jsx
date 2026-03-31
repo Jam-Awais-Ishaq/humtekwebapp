@@ -7,7 +7,7 @@ export default function DashBoardPage() {
         <>
             <StatCard />
             <RevenueChart />
-            <RecentInvoices />
+            {/* <RecentInvoices /> */}
         </>
     )
 }

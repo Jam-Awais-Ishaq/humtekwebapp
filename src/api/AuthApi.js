@@ -116,3 +116,8 @@ export const deleteInvoice = async (id) => {
   const res = await apiProduct.delete(`/api/products/deleteInvoice/${id}`);
   return res.data;
 };
+// Dashboard Routes
+export const getDashboardStats = async () => {
+  const res = await apiProduct.get("/api/dashboard/stats");
+  return res.data;
+};

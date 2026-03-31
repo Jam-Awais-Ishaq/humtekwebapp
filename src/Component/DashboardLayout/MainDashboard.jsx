@@ -23,7 +23,6 @@ const MainDashboard = () => {
                 <Route path="/" element={<MainForm />} />
                 <Route path="/dashboard" element={<DashboardLayout />}>
                     <Route index element={<DashBoardPage />} />
-                    <Route path="analytics" element={<AnalyticsPage />} />
                     <Route path="products" element={<ProductsPage />} />
                     <Route path="invoices" element={<InvoicesPage />} />
                     <Route path="customers" element={<CustomerPage />} />
